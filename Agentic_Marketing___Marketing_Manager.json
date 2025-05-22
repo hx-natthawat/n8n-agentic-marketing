@@ -1,0 +1,641 @@
+{
+  "name": "Agentic Marketing - Marketing Manager",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "\n{\n\"query\": \n\"New lipstick line with premium positioning at a $22 price point. Key features include a long-lasting but moisturizing formula, natural ingredients, vegan, and cruelty-free. There are 15 color options available. The target audience is women aged 25-40 who purchase premium makeup. The budget for the campaign is $120K, and the timeline for launch is 8 weeks. Need a full campaign plan.\",\n\"campaign_request\": \n\"Need marketing campaign for new lipstick line: • Premium positioning, $22 price point • Key feature: Long-lasting but moisturizing formula • Contains natural ingredients, vegan, cruelty-free • 15 color options available • Target: Women 25-40 who buy premium makeup • Budget: $120K\\n• Timeline: Launch in 8 weeks • Need full campaign plan\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1760,
+        175
+      ],
+      "id": "0ac0062a-ea64-4807-ab81-5dcdc622b35c",
+      "name": "Edit Fields",
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1980,
+        275
+      ],
+      "id": "11392693-7d06-4650-bc48-b7231cf85762",
+      "name": "When clicking ‘Test workflow’",
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "id": "81c7d655-1fa6-45e9-8c96-6c3b18c2df41",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1980,
+        75
+      ]
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"campaign_objectives\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"product_name\": {\n          \"type\": \"string\"\n        },\n        \"target_audience\": {\n          \"type\": \"string\"\n        },\n        \"key_messaging\": {\n          \"type\": \"string\"\n        },\n        \"primary_goals\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          }\n        },\n        \"secondary_goals\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          }\n        },\n        \"success_metrics\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          }\n        },\n        \"timeline\": {\n          \"type\": \"string\"\n        },\n        \"budget_considerations\": {\n          \"type\": \"string\"\n        },\n        \"channels\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          }\n        }\n      },\n      \"required\": [\n        \"target_audience\",\n        \"key_messaging\",\n        \"primary_goals\",\n        \"secondary_goals\",\n        \"success_metrics\",\n        \"timeline\",\n        \"budget_considerations\",\n        \"channels\"\n      ]\n    }\n  },\n  \"required\": [\n    \"campaign_objectives\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -1060,
+        395
+      ],
+      "id": "a35fe393-54e8-41cc-bcce-61149065ec0a",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "id": "b8e09995-30bf-45c6-9e11-1ab8b72e834c",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        -1420,
+        395
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "name": "market_research",
+        "description": "Use this tool to analyze market trends, target audience demographics, and competitive landscape for the campaign. Provide the market segment or industry to research."
+      },
+      "id": "a462bab2-5ec1-4c8f-b491-56a665869274",
+      "name": "Market Research Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "position": [
+        -1300,
+        395
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "name": "competitor_analysis",
+        "description": "Use this tool to analyze competitors in the specified industry or for a specific product. Provide the industry or product name to analyze competitors."
+      },
+      "id": "a9154044-83f8-4535-b3d0-f2f6f06b5f5a",
+      "name": "Competitor Analysis Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "position": [
+        -1180,
+        395
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$input.item.json.campaign_request}}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are the Marketing Manager for a product marketing campaign. Your role is to analyze market research data and target audience insights to define clear, measurable campaign objectives.\n\nWhen presented with a campaign request, follow these steps:\n1. Use the market_research tool to gather insights about the relevant market segment\n2. Use the competitor_analysis tool to understand the competitive landscape\n3. Based on this research, develop comprehensive campaign objectives\n\n### CRITICAL INSTRUCTION: YOUR ENTIRE RESPONSE MUST BE VALID JSON ONLY\nDo not include any explanatory text, markdown formatting, or natural language outside the JSON structure.\nDo not prefix your response with ```json or any other markers.\nDo not include any text after the JSON.\n\nYour response must be a single JSON object with this exact structure:\n{\n  \"campaign_objectives\": {\n    \"product_name\": \"string value\",\n    \"target_audience\": \"string value\",\n    \"key_messaging\": \"string value\",\n    \"primary_goals\": [\"string1\", \"string2\", \"string3\"],\n    \"secondary_goals\": [\"string1\", \"string2\"],\n    \"success_metrics\": [\"string1\", \"string2\", \"string3\"],\n    \"timeline\": \"string value\",\n    \"budget_considerations\": \"string value\",\n    \"channels\": [\"string1\", \"string2\", \"string3\"]\n  }\n}\n\nField requirements:\n- product_name: (string) Product Name\n- target_audience: (string) A detailed description of the demographic and psychographic profile of your target customers.\n  Example: \"Health-conscious millennials aged 25-35 with disposable income who prioritize organic ingredients and sustainable packaging\"\n\n- key_messaging: (string) The core value proposition and primary message of the campaign in 2-3 concise sentences.\n  Example: \"Our plant-based protein powder delivers 25g of complete protein with only natural ingredients. It's designed for active professionals who want clean nutrition without artificial additives.\"\n\n- primary_goals: (array of strings) 3-5 specific, measurable main objectives with quantifiable targets and timeframes.\n  Example: [\"Achieve 10,000 product sales within the first quarter\", \"Generate 500,000 website visits in 90 days\", \"Secure distribution in 50 retail locations by end of Q2\"]\n\n- secondary_goals: (array of strings) 2-4 supporting objectives that complement the primary goals.\n  Example: [\"Build email subscriber list to 15,000 contacts\", \"Achieve 25% repeat purchase rate\", \"Collect 1,000+ customer reviews\"]\n\n- success_metrics: (array of strings) 3-6 specific KPIs that will be used to measure campaign performance.\n  Example: [\"Conversion rate (target: 3.5%)\", \"Cost per acquisition (target: under $25)\", \"Social media engagement rate (target: 4%)\", \"Net Promoter Score (target: 40+)\"]\n\n- timeline: (string) Detailed breakdown of campaign phases with specific dates or durations.\n  Example: \"12-week campaign: Weeks 1-2: Pre-launch teaser content; Weeks 3-4: Official launch and PR push; Weeks 5-8: Heavy digital advertising; Weeks 9-12: Influencer partnerships and retention marketing\"\n\n- budget_considerations: (string) Breakdown of budget allocation across different channels and activities with percentages or amounts.\n  Example: \"Total budget: $75,000. Digital advertising: 40% ($30,000); Influencer partnerships: 25% ($18,750); Content creation: 20% ($15,000); PR and events: 15% ($11,250)\"\n\n- channels: (array of strings) List of specific marketing channels and platforms to be utilized.\n  Example: [\"Instagram and TikTok advertising\", \"Google Search and Display Network\", \"Email marketing sequences\", \"Podcast sponsorships\", \"Retail point-of-sale displays\"]\n\nKeep your analysis strategic and actionable. Focus on measurable outcomes that align with business objectives. Be specific with numbers, percentages, and timeframes wherever possible."
+        }
+      },
+      "id": "767c7ddc-f917-42ec-9b29-d121bc0723cd",
+      "name": "Marketing Manager Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        -1388,
+        175
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "campaign_objectives",
+              "value": "={{$json.output.campaign_objectives}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7e5a059e-db27-4988-8887-ce38f3946d09",
+      "name": "Data Storage: Campaign Objectives",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -860,
+        50
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "agent_type",
+              "value": "Marketing Manager"
+            },
+            {
+              "name": "agent_output",
+              "value": "={{$node[\"Data Storage: Campaign Objectives\"].json}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6f185caa-f904-4c4a-b035-261b810274a3",
+      "name": "Set Agent Type for Marketing Manager Review",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        50
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Review the following output from the Marketing Manager Agent:\n\n{{$node[\"Set Agent Type for Marketing Manager Review\"].json.agent_output.campaign_objectives.toJsonString()}}.\n\nEvaluate it for clarity, strategic alignment, measurability, and feasibility.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are the Agent Manager for a multi-agent marketing campaign system. Your role is to evaluate and approve the outputs of other AI agents in the marketing workflow.\n\nWhen reviewing the Marketing Manager's campaign objectives, evaluate them based on these criteria:\n1. Strategic alignment with business goals\n2. Clarity and specificity of target audience\n3. Measurability of goals and metrics\n4. Feasibility within the stated timeline and budget\n5. Appropriateness of selected marketing channels\n\n### CRITICAL INSTRUCTION: YOUR ENTIRE RESPONSE MUST BE VALID JSON ONLY\nDo not include any explanatory text, markdown formatting, or natural language outside the JSON structure.\nDo not prefix your response with ```json or any other markers.\nDo not include any text after the JSON.\n\nYour response must be a single JSON object with this exact structure:\n{\n  \"approval_status\": \"approved\" OR \"needs_revision\",\n  \"feedback\": \"2-3 sentence summary of your evaluation\",\n  \"strengths\": [\"strength1\", \"strength2\", \"strength3\"],\n  \"weaknesses\": [\"weakness1\", \"weakness2\"] or [] if approved,\n  \"next_steps\": [\"step1\", \"step2\", \"step3\"]\n}\n\nBe constructive in your feedback and specific in your recommendations. If the output meets all criteria, approve it. If it needs improvement, clearly explain why and how it should be revised."
+        }
+      },
+      "id": "b70ecea2-afbf-455e-b04a-3f069cbdee3b",
+      "name": "Agent Manager Approval: Marketing Manager Output",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        -388,
+        50
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.output.approval_status}}",
+              "value2": "approved"
+            }
+          ],
+          "number": [
+            {
+              "value1": "={{ $runIndex }}",
+              "operation": "larger",
+              "value2": 3
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "id": "3fb09ca2-56f5-4dc6-b05b-c7a3ea394990",
+      "name": "Decision Router: Marketing Manager Output",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        20,
+        50
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "status",
+              "value": "approved"
+            },
+            {
+              "name": "campaign_objectives",
+              "value": "={{$node[\"Data Storage: Campaign Objectives\"].json.campaign_objectives}}"
+            },
+            {
+              "name": "approval_feedback",
+              "value": "={{$('Marketing Manager Agent').item.json.output}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a7d5e280-72fa-40ed-9462-766bfdbf1884",
+      "name": "Workflow Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        680,
+        0
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "613a754f-7587-493f-ae05-4c7fc9010679",
+      "name": "Agent Manager Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        -300,
+        270
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -1540,
+        395
+      ],
+      "id": "5496f201-f880-4bf4-be53-e3f5efdfd22d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "2cAtVcN7wisKXhHj",
+          "name": "OpenAi Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -420,
+        270
+      ],
+      "id": "b4557d1d-6817-493f-bcf9-eee17ee4e1ab",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "2cAtVcN7wisKXhHj",
+          "name": "OpenAi Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"approval_status\": {\n      \"type\": \"string\",\n      \"enum\": [\"approved\", \"needs_revision\"]\n    },\n    \"feedback\": {\n      \"type\": \"string\"\n    },\n    \"strengths\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"weaknesses\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n    \"next_steps\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    }\n  },\n  \"required\": [\n    \"approval_status\",\n    \"feedback\",\n    \"strengths\",\n    \"weaknesses\",\n    \"next_steps\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -180,
+        270
+      ],
+      "id": "3893708a-29f0-4aed-913d-fca0eae33971",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Process feedback and prepare for revision\n// Access the parsed output directly (no need for .output)\nconst feedback = $input.first().json;\nconst campaignRequest = $('Edit Fields').first().json.campaign_request\n// const campaignRequest = $('When Executed by Another Workflow').first().json.campaign_request\n\nreturn {\n  original_output: $('Set Agent Type for Marketing Manager Review').first().json.agent_output,\n  feedback: feedback.feedback,\n  weaknesses: feedback.weaknesses,\n  next_steps: feedback.next_steps,\n  campaign_request:  campaignRequest + \"\\n\\nPlease revise based on this feedback: \" + feedback.feedback\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        275
+      ],
+      "id": "32cd7971-2e00-42e2-ab60-6892f6a94ead",
+      "name": "Feedback Loop: Marketing Manager"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "=[Marketing Documents] {{$node[\"Data Storage: Campaign Objectives\"].json.campaign_objectives.product_name}}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        240,
+        0
+      ],
+      "id": "ac372e8b-4c79-4949-b162-cac3de2df682",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "6WyTXq7YUX3HcPuZ",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "share",
+        "folderNoRootId": {
+          "__rl": true,
+          "value": "={{ $('Google Drive').item.json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone",
+            "allowFileDiscovery": true
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        460,
+        0
+      ],
+      "id": "97812fb3-82c8-4c77-b95d-870cca48633b",
+      "name": "Google Drive1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "6WyTXq7YUX3HcPuZ",
+          "name": "Google Drive account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "": {
+            "campaign_request": {
+              "product_name": "Dream JELLY TINT",
+              "market": "Premium, priced at 1000 Baht per piece",
+              "key_features": "Long-lasting formula with moisturization, lightweight texture",
+              "ingredients": "Natural, vegan, cruelty-free",
+              "color_options": 15,
+              "target_audience": "Women aged 25-40 who purchase premium cosmetics",
+              "marketing_budget": "200,000 Baht",
+              "campaign_duration": "Launch in 8 weeks",
+              "channels": [
+                "TIKTOK",
+                "IG",
+                "FACEBOOK PAGE"
+              ],
+              "campaign_type": "Full campaign plan needed"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Marketing Manager Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Marketing Manager Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Marketing Manager Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Market Research Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Manager Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Competitor Analysis Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Marketing Manager Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marketing Manager Agent": {
+      "main": [
+        [
+          {
+            "node": "Data Storage: Campaign Objectives",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Storage: Campaign Objectives": {
+      "main": [
+        [
+          {
+            "node": "Set Agent Type for Marketing Manager Review",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Agent Type for Marketing Manager Review": {
+      "main": [
+        [
+          {
+            "node": "Agent Manager Approval: Marketing Manager Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent Manager Approval: Marketing Manager Output": {
+      "main": [
+        [
+          {
+            "node": "Decision Router: Marketing Manager Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decision Router: Marketing Manager Output": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Feedback Loop: Marketing Manager",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent Manager Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agent Manager Approval: Marketing Manager Output",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Marketing Manager Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent Manager Approval: Marketing Manager Output",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Agent Manager Approval: Marketing Manager Output",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Feedback Loop: Marketing Manager": {
+      "main": [
+        [
+          {
+            "node": "Marketing Manager Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Google Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "Workflow Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3a49791b-6831-49c8-89ac-4f1f905e1e5d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "23390975537aad780256c73dac50d79295eb4a317a3325529b1a7af134ef73c5"
+  },
+  "id": "9xXLGuyFVlH0789s",
+  "tags": []
+}

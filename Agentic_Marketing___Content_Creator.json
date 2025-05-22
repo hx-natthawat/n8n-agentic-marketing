@@ -1,0 +1,585 @@
+{
+  "name": "Agentic Marketing - Content Creator",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "8222015b-0cbf-49c0-bd2e-df3a341730f3",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        560,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "visual_assets",
+              "value": "={{$json.design_assets}}"
+            },
+            {
+              "name": "creative_concepts",
+              "value": "={{$json.creative_concepts}}"
+            },
+            {
+              "name": "query",
+              "value": "={{ $json.raw_query }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "95f71e96-b79f-44eb-acfa-1cd2a4bde1c0",
+      "name": "Data Storage: Content Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "id": "19cea3b1-cae8-4d21-846f-0db60d8982d2",
+      "name": "Language Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1560,
+        40
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "2cAtVcN7wisKXhHj",
+          "name": "OpenAi Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$node[\"Data Storage: Content Input\"].json}}",
+        "options": {
+          "systemMessage": "=You are the Content Creator for a product marketing campaign.Your expertise is in crafting compelling written and conceptual content across multiple platforms. When presented with visual assets, creative concepts, and the specified language, respond with platform-specific content ideas, copy suggestions, and content calendars. Utilize available tools such as the Content Planning Tool and Calendar Tool to enhance your outputs. Consider the unique attributes of each platform (Instagram, TikTok, blog, etc.) and tailor your approach accordingly. Your outputs should be engaging, on-brand, and designed to drive audience action.\n\n### CRITICAL INSTRUCTION: YOUR ENTIRE RESPONSE MUST BE VALID JSON ONLY\nDo not include any explanatory text, markdown formatting, or natural language outside the JSON structure.\nDo not prefix your response with ```json or any other markers.\nDo not include any text after the JSON.\n\nYour response must be a single JSON object with this exact structure:\n{\n  \"content_ideas\": [\n    {\n      \"platform\": \"string value\",\n      \"copy_suggestions\": \"string value\",\n      \"content_calendar\": \"string value\",\n      \"example_content\": \"string value\",\n      \"hashtags\": [\"string1\", \"string2\"],\n      \"guideline_contents\": \"string value\"\n    }\n  ]\n}\n\nField requirements:\n- content_ideas: (array of objects) One object for each platform-specific content idea.\n\n- platform: (string) The platform for which the content is intended.\n  Example: \"Instagram\"\n\n- copy_suggestions: (string) Suggested copy for the platform.\n  Example: \"Engage your audience with vibrant visuals and catchy captions.\"\n\n- content_calendar: (string) A brief overview of the content schedule.\n  Example: \"Weekly posts every Monday and Thursday at 6 PM.\"\n\n- example_content: (string) Example content for each channel that you want to post.\n  Example: \"A vibrant image of our new lipstick shade with a call-to-action to visit our website.\"\n\n- hashtags: (array of strings) Example hashtags to use in the post.\n  Example: [\"#BeautyRevolution\", \"#VeganLipstick\"]\n\n- guideline_contents: (string) Guidelines for creating content for posts.\n  Example: \"Ensure all images are high-resolution and captions are under 150 characters.\"\n\nThis detailed structure ensures consistency and compatibility with downstream systems.\n\n### Translation Guidelines\n\n1. When receiving a user request in a non-English language:\n   - Translate the request to English before passing to the Marketing Manager\n   - Store the original language for later use\n\n2. When presenting results to the user:\n   - Translate key deliverable summaries back to the user's original language\n   - Maintain technical terms or brand names in their original form\n   - Ensure translations preserve the tone and intent of the marketing content"
+        }
+      },
+      "id": "c2151519-1357-42dc-ba2b-cc2d3c920512",
+      "name": "Content Creator Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        1620,
+        -200
+      ]
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        560,
+        -40
+      ],
+      "id": "348bf37b-7e89-41ee-a82d-76f243e2af83",
+      "name": "When clicking ‘Test workflow’",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"query\": \"• ชื่อ ผลิตภัณ: Dream JELLY TINT\\n•ตลาดระดับพรีเมียม, ราคาชิ้นละ 1000 บาท\\n• คุณสมบัติหลัก: สูตรติดทนนานแต่ให้ความชุ่มชื้น,เนื้อบางเบา\\n• ส่วนผสม: ผลิตจากธรรมชาติ, วีแกน, ไม่ทดลองกับสัตว์\\n• มีให้เลือก 15 สี • กลุ่มเป้าหมาย: ผู้หญิงอายุ 25-40 ปีที่ซื้อเครื่องสำอางพรีเมียม\\n• งบประมาณทำการตลาด: 200,000 บาท\\n• ระยะเวลา: เปิดตัวใน 8 สัปดาห์\\n• Channel: TIKTOK, IG, FACEBOOK PAGE\\n• ต้องการแผนแคมเปญแบบเต็มรูปแบบ\",\n  \"creative_concepts\": [\n    {\n      \"concept_title\": \"Ethereal Elegance\",\n      \"concept_description\": \"A dreamy, ethereal campaign highlighting the luxurious and natural aspects of Dream JELLY TINT. It conveys a sense of sophistication and elegance, with visuals that emphasize the natural and vegan qualities of the product in a serene and calming setting.\",\n      \"key_visuals\": \"Soft pastel color palette with hints of gold and cream. Imagery includes models in natural settings such as gardens and beaches, with a focus on natural beauty and tranquility. Use of light, flowing fabrics and soft focus photography to create a dreamy, ethereal look.\",\n      \"key_messaging\": \"Tagline: 'Naturally Dreamy, Ethically Luxurious.' Messaging highlights the natural and vegan aspects of the product, emphasizing its ethical production and luxurious feel. Focus on comfort and long-lasting hydration.\",\n      \"channels\": [\n        \"Instagram Stories and Reels\",\n        \"TikTok influencer collaborations\",\n        \"Facebook Ads targeting eco-conscious audiences\"\n      ]\n    },\n    {\n      \"concept_title\": \"Vibrant Vegan Glam\",\n      \"concept_description\": \"An energetic and bold campaign that emphasizes the vibrant colors and ethical qualities of Dream JELLY TINT. It targets a younger, social media-savvy audience with dynamic visuals and engaging content that highlights the fun and vibrant side of the product.\",\n      \"key_visuals\": \"Bold, vibrant color palette featuring the 15 shades of the product. High-energy visuals with models showcasing the product in urban settings, using dynamic angles and motion. Use of neon lighting and graphic elements for a modern and edgy look.\",\n      \"key_messaging\": \"Tagline: 'Boldly Vegan, Beautifully You.' Messaging focuses on the vibrant color range and ethical production, appealing to a younger audience that values self-expression and ethical beauty choices.\",\n      \"channels\": [\n        \"TikTok ad campaigns\",\n        \"Instagram carousel posts\",\n        \"Collaborations with vibrant lifestyle influencers\"\n      ]\n    },\n    {\n      \"concept_title\": \"Timeless Ethical Beauty\",\n      \"concept_description\": \"A classic approach that merges timeless beauty standards with modern ethical considerations. This concept appeals to the audience's desire for products that are both luxurious and responsible, with a focus on elegance and timeless appeal.\",\n      \"key_visuals\": \"Classic black and white photography with selective color highlighting the product. Elegant and sophisticated compositions with models styled in timeless fashion, accented by the product's modern color pops. Clean typography with gold accents for a luxurious feel.\",\n      \"key_messaging\": \"Tagline: 'Timeless Beauty, Ethical Choice.' Messaging bridges the gap between classic beauty and modern ethics, emphasizing the product's luxurious feel and ethical production.\",\n      \"channels\": [\n        \"Print magazine ads in high-end fashion publications\",\n        \"Instagram influencer partnerships\",\n        \"Video content for YouTube\"\n      ]\n    }\n  ],\n  \"visual_assets\": [\n    {\n      \"concept_title\": \"Ethereal Elegance\",\n      \"mockup_descriptions\": [\n        {\n          \"channel\": \"Instagram Stories and Reels\",\n          \"description\": \"A serene and calming visual featuring the Dream JELLY TINT in a natural setting with soft pastel hues. The product is showcased alongside natural elements like flowers and leaves, with models in flowing dresses, captured in soft-focus photography to enhance the dreamy feel.\"\n        },\n        {\n          \"channel\": \"TikTok influencer collaborations\",\n          \"description\": \"Dynamic and engaging visuals for TikTok featuring influencers using the product in natural settings. The focus is on the product's natural and vegan qualities, with a serene and sophisticated visual style.\"\n        },\n        {\n          \"channel\": \"Facebook Ads targeting eco-conscious audiences\",\n          \"description\": \"A calming and sophisticated visual for Facebook Ads highlighting the natural and ethical aspects of the product. The design features the product in a natural setting with models exuding tranquility and elegance.\"\n        }\n      ],\n      \"color_palette\": [\n        \"#D8BFD8 (Thistle)\",\n        \"#FFE5B4 (Peach)\",\n        \"#F5F5DC (Beige)\",\n        \"#FFFACD (Lemon Chiffon)\",\n        \"#DAA520 (Goldenrod)\"\n      ],\n      \"typography\": {\n        \"headings\": \"Playfair Display, Bold, 24-36pt\",\n        \"body\": \"Roboto, Regular, 14-18pt\",\n        \"accents\": \"Lora, Italic\"\n      },\n      \"layout_guidelines\": \"Use asymmetrical layouts with generous white space. Place product imagery as focal point with supporting elements arranged in a soft, flowing pattern. Maintain consistent margins of 5% of canvas width.\",\n      \"design_rationale\": \"This design system embodies the 'Ethereal Elegance' concept by using a soft and calming color palette that enhances the product's natural and vegan qualities. The typography choices provide a blend of elegance and readability, while the layout supports the serene messaging by focusing on natural beauty and tranquility.\"\n    },\n    {\n      \"concept_title\": \"Vibrant Vegan Glam\",\n      \"mockup_descriptions\": [\n        {\n          \"channel\": \"TikTok ad campaigns\",\n          \"description\": \"High-energy and vibrant visuals for TikTok ads featuring the colorful range of Dream JELLY TINT. The scene captures models in dynamic urban settings with bold colors and neon lighting to showcase the product's vibrant appeal.\"\n        },\n        {\n          \"channel\": \"Instagram carousel posts\",\n          \"description\": \"Dynamic and colorful Instagram carousel posts featuring multiple images of the product in use. Each slide showcases a different vibrant shade in urban settings with playful and energetic compositions.\"\n        },\n        {\n          \"channel\": \"Collaborations with vibrant lifestyle influencers\",\n          \"description\": \"Eye-catching visuals for influencer collaborations on Instagram, focusing on the vibrant and ethical aspects of the product. The images capture influencers in bold, colorful settings wearing the product.\"\n        }\n      ],\n      \"color_palette\": [\n        \"#FF4500 (Orange Red)\",\n        \"#32CD32 (Lime Green)\",\n        \"#FFD700 (Gold)\",\n        \"#1E90FF (Dodger Blue)\",\n        \"#FF1493 (Deep Pink)\"\n      ],\n      \"typography\": {\n        \"headings\": \"Montserrat, Bold, 26-40pt\",\n        \"body\": \"Open Sans, Regular, 16-20pt\",\n        \"accents\": \"Raleway, Semi-Bold\"\n      },\n      \"layout_guidelines\": \"Employ dynamic and bold layouts with strong contrast. Use vibrant color blocks to draw attention to the product. Arrange elements in a way that guides the viewer's eye through a lively visual journey.\",\n      \"design_rationale\": \"The 'Vibrant Vegan Glam' design system captures the youthful and energetic spirit of the campaign by using a bold color palette and dynamic layouts. Typography choices are modern and clear, complementing the vibrant visuals and ensuring readability while emphasizing the product's fun and ethical qualities.\"\n    },\n    {\n      \"concept_title\": \"Timeless Ethical Beauty\",\n      \"mockup_descriptions\": [\n        {\n          \"channel\": \"Print magazine ads in high-end fashion publications\",\n          \"description\": \"Elegant and sophisticated print ad featuring the Dream JELLY TINT with classic black and white photography and selective color highlighting. The composition is timeless, with models styled in elegant fashion to emphasize the product's luxurious appeal.\"\n        },\n        {\n          \"channel\": \"Instagram influencer partnerships\",\n          \"description\": \"Sophisticated and elegant visuals for influencer partnerships on Instagram, showcasing the product in a timeless fashion. The images capture models in classic styles with the product highlighted through selective color.\"\n        },\n        {\n          \"channel\": \"Video content for YouTube\",\n          \"description\": \"Timeless and elegant video content for YouTube featuring the product. The video uses classic styling and selective color to emphasize the product's luxurious and ethical qualities, appealing to a sophisticated audience.\"\n        }\n      ],\n      \"color_palette\": [\n        \"#000000 (Black)\",\n        \"#FFFFFF (White)\",\n        \"#FFD700 (Gold)\",\n        \"#B0C4DE (Light Steel Blue)\",\n        \"#CD5C5C (Indian Red)\"\n      ],\n      \"typography\": {\n        \"headings\": \"Bodoni MT, Bold, 28-42pt\",\n        \"body\": \"Georgia, Regular, 16-22pt\",\n        \"accents\": \"Garamond, Italic\"\n      },\n      \"layout_guidelines\": \"Maintain a clean and classic layout with balanced compositions. Use gold accents to draw attention to the product. Ensure a harmonious flow between imagery and text for a refined appearance.\",\n      \"design_rationale\": \"The 'Timeless Ethical Beauty' design system merges classic elegance with ethical values by using a sophisticated black and white palette accented by selective color. The typography is timeless, enhancing the luxurious feel while emphasizing the product's ethical production.\"\n    }\n  ],\n  \"design_system_recommendations\": \"Establish a master style guide with the defined color codes, typography specifications, and layout principles. Create templates for recurring formats to ensure consistency. Develop a shared asset library for photographers and designers with approved visual elements. Implement regular design reviews to maintain alignment with brand guidelines.\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        800,
+        -40
+      ],
+      "id": "f24334b0-03ba-4bd7-a3f9-5098d48abf91",
+      "name": "Edit Fields",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "content_ideas",
+              "value": "={{$('Content Creator Agent').item.json.output.parseJson().content_ideas}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b3ef7089-0903-47af-8a8a-3710802f7b16",
+      "name": "Workflow Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2940,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "id": "2e862241-31a7-472b-b699-7d4c4280072b",
+      "name": "Language Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        60
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "2cAtVcN7wisKXhHj",
+          "name": "OpenAi Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Raw query: {{ $('Data Storage: Content Input').item.json.query }}\n\nResponse from Content Create Agent\n{{ $json.output }}",
+        "options": {
+          "systemMessage": "=# JSON to Document Converter Agent Prompt\n\nYou are the JSON to Document Converter Agent for a product marketing campaign. Your role is to transform structured JSON content into comprehensive documents that Content Creators can utilize effectively. When presented with JSON data, extract and organize the information into a clear and actionable document format. Ensure that each section of the document is well-structured and includes all necessary details for content creation.\n\n### CRITICAL INSTRUCTION: YOUR RESPONSE MUST BE A WELL-FORMATTED DOCUMENT\n- Detect the language from the raw query and set it as the output language.\n- Extract each content idea from the JSON and convert it into a detailed section in the document.\n- Include the following sections for each content idea, and **strictly translate all content into the detected language**:\n  - **Platform**: Specify the platform for which the content is intended.\n  - **Copy Suggestions** (คำแนะนำการเขียนเนื้อหา): Provide suggested copy that aligns with the platform's tone.\n  - **Content Calendar** (ปฏิทิน): Outline the posting schedule.\n  - **Example Content** (ตัวอย่างเนื้อหา): Describe the visual or conceptual content to be created.\n  - **Hashtags** (แฮชแท็ก): List relevant hashtags to be used.\n  - **Guideline Contents** (แนวทางการสร้างเนื้อหา): Offer guidelines for content creation, emphasizing style and tone.\n- Ensure the document is clear, concise, and easy for Content Creators to follow.\n- Maintain the original intent and tone of the content ideas while converting them to document format.\n- **Translate all content fields into the detected language**, ensuring translations maintain the original meaning and tone.\n\nThis structured approach ensures that Content Creators have all the necessary information to produce high-quality, on-brand content for the marketing campaign."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        2000,
+        -200
+      ],
+      "id": "0af31040-1fa7-43ec-92be-811f7211d7dc",
+      "name": "JSON to Document Converter Agent"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "output",
+        "options": {
+          "fileName": "=Content Creator Planning_{{$now.format('yyyy-MM-dd')}}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2400,
+        -200
+      ],
+      "id": "543b96f8-6fa5-45b7-a015-56d487a0ed92",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "=[Marketing Documents] {{ $('When Executed by Another Workflow').item.json.campaign_objectives.product_name }}",
+        "limit": 1,
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1360,
+        -200
+      ],
+      "id": "acd260f3-47e0-4dbe-bee8-61416af8c8c7",
+      "name": "Search Folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "6WyTXq7YUX3HcPuZ",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "=Content Creator Planning_{{$now.format('yyyy-MM-dd')}}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Search Folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2680,
+        -200
+      ],
+      "id": "7aa3dd60-bdca-4c72-a48f-8f7bcf92e3ba",
+      "name": "Google Drive1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "6WyTXq7YUX3HcPuZ",
+          "name": "Google Drive account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "status": "approved",
+          "design_assets": [
+            {
+              "concept_title": "Vegan Glamour Unveiled",
+              "mockup_descriptions": [
+                {
+                  "channel": "Instagram sponsorships",
+                  "description": "A luxurious and ethereal Instagram post featuring Dream JELLY TINT against a minimalist backdrop. The lip tint should be positioned elegantly with a velvet-like texture surrounding it, using deep jewel tones. Models with radiant skin showcasing the lip tint in a glamorous setting.",
+                  "gemini_prompt": "Create a photorealistic marketing mockup of Dream JELLY TINT for an Instagram post in 1:1 square format. Position the lip tint prominently on a velvet-like surface with deep jewel tones. Include a model with flawless, radiant skin applying the tint. Use soft lighting to create a dreamy atmosphere. Incorporate green and gold accents subtly. High resolution, professional product photography with clean composition."
+                },
+                {
+                  "channel": "TikTok advertising",
+                  "description": "A dynamic and engaging TikTok ad showcasing the luxurious appeal of Dream JELLY TINT. The focus is on its vegan and ethical attributes while maintaining a sense of glamour. Use models in a sequence of shots applying the tint in elegant settings.",
+                  "gemini_prompt": "Create a photorealistic marketing mockup for TikTok in 9:16 vertical format. Capture Dream JELLY TINT being applied by a model in an elegant setting. Use deep jewel tones in the background and subtle gold accents. Ensure the lighting is soft and ethereal, emphasizing the product's vegan luxury. High resolution, professional product photography."
+                },
+                {
+                  "channel": "Facebook Page engagement campaigns",
+                  "description": "A captivating Facebook Page cover image that highlights the vegan and luxurious aspects of Dream JELLY TINT. The design should be elegant and sophisticated, featuring the product with green and gold accents.",
+                  "gemini_prompt": "Create a photorealistic marketing mockup for a Facebook Page cover in 16:9 horizontal format. Feature Dream JELLY TINT with an elegant composition, using deep jewel tones and green and gold accents. The mood should be luxurious and sophisticated with soft lighting. High resolution, clean composition."
+                }
+              ],
+              "color_palette": [
+                "#4B2E83 (Deep Purple)",
+                "#6B8E23 (Olive Green)",
+                "#FFD700 (Gold)",
+                "#FFFFFF (Pure White)"
+              ],
+              "typography": {
+                "headings": "Playfair Display, Bold, 36-48px",
+                "body": "Lora, Regular, 14-18px",
+                "accents": "Montserrat, Semi-Bold"
+              },
+              "layout_guidelines": "Use symmetrical layouts with focus on product imagery. Maintain equal margins of 5% of canvas width. Highlight the product using deep jewel tones against minimalist backgrounds.",
+              "design_rationale": "This design approach emphasizes the luxurious and ethical nature of the 'Vegan Glamour Unveiled' concept. The deep jewel tones and soft lighting create an elegant and ethereal atmosphere, while the green and gold accents emphasize the product's natural and vegan attributes. The typography choices enhance readability and sophistication, aligning with the high-end brand image."
+            },
+            {
+              "concept_title": "Boldly Natural",
+              "mockup_descriptions": [
+                {
+                  "channel": "TikTok advertising",
+                  "description": "A vibrant TikTok ad featuring Dream JELLY TINT in bold, lively settings. The ad should focus on self-expression and empowerment, using diverse models applying the tint in everyday environments. Incorporate bright colors and dynamic compositions.",
+                  "gemini_prompt": "Create a photorealistic marketing mockup for TikTok in 9:16 vertical format. Showcase Dream JELLY TINT in use by diverse models in everyday settings, using bright reds, pinks, and oranges. Capture dynamic and engaging compositions with high energy. High resolution, professional product photography."
+                },
+                {
+                  "channel": "Instagram carousel posts",
+                  "description": "An Instagram carousel post celebrating self-expression with Dream JELLY TINT. Each image should feature the product in a bold, colorful setting with natural elements like flowers or fruits.",
+                  "gemini_prompt": "Create a photorealistic marketing mockup for an Instagram carousel post in 1:1 square format. Feature Dream JELLY TINT in various vibrant settings, using bold colors and natural elements like flowers. Highlight diversity and self-expression. High resolution, clean composition."
+                },
+                {
+                  "channel": "Interactive Facebook Live sessions",
+                  "description": "A promotional image for a Facebook Live session focused on Dream JELLY TINT. The image should be dynamic and colorful, conveying excitement and engagement with the product.",
+                  "gemini_prompt": "Create a photorealistic marketing mockup for a Facebook Live session promotion in 16:9 horizontal format. Highlight Dream JELLY TINT with a dynamic, colorful composition. Use bright colors and natural elements to convey excitement. High resolution, professional product photography."
+                }
+              ],
+              "color_palette": [
+                "#FF6347 (Tomato Red)",
+                "#FF69B4 (Hot Pink)",
+                "#FFA500 (Orange)",
+                "#32CD32 (Lime Green)"
+              ],
+              "typography": {
+                "headings": "Oswald, Bold, 30-40px",
+                "body": "Roboto, Regular, 12-16px",
+                "accents": "Poppins, Medium"
+              },
+              "layout_guidelines": "Use bold, asymmetrical layouts with vibrant backgrounds. Focus on product and model interaction. Maintain visual energy with dynamic compositions and minimal white space.",
+              "design_rationale": "The 'Boldly Natural' concept is brought to life through a vibrant color palette and dynamic compositions that emphasize self-expression and empowerment. The use of natural elements and diverse models aligns with the product's ethical and inclusive values. The typography and layout choices enhance the bold and energetic brand image."
+            },
+            {
+              "concept_title": "Everyday Elegance",
+              "mockup_descriptions": [
+                {
+                  "channel": "Instagram stories",
+                  "description": "An Instagram story featuring Dream JELLY TINT as part of a daily routine. The story should be soft and elegant, highlighting the product's ease of use and natural beauty enhancement.",
+                  "gemini_prompt": "Create a photorealistic marketing mockup for an Instagram story in 9:16 vertical format. Show Dream JELLY TINT being used in a casual, chic setting, emphasizing natural beauty. Use soft pastel colors and close-up shots. High resolution, professional product photography."
+                },
+                {
+                  "channel": "Facebook Page posts",
+                  "description": "A Facebook post illustrating the seamless integration of Dream JELLY TINT into everyday life. The image should be warm and inviting, with models using the product in relatable settings.",
+                  "gemini_prompt": "Create a photorealistic marketing mockup for a Facebook Page post in 16:9 horizontal format. Feature Dream JELLY TINT in use in everyday settings, with a warm, inviting atmosphere. Use soft pastels and natural lighting. High resolution, clean composition."
+                },
+                {
+                  "channel": "TikTok influencer collaborations",
+                  "description": "A promotional TikTok video featuring influencers using Dream JELLY TINT as part of their daily beauty routine. The video should be elegant and relatable, highlighting the product's effortless appeal.",
+                  "gemini_prompt": "Create a photorealistic marketing mockup for a TikTok collaboration in 9:16 vertical format. Show influencers using Dream JELLY TINT in daily routines, with an elegant, relatable vibe. Use soft pastels and natural settings. High resolution, professional product photography."
+                }
+              ],
+              "color_palette": [
+                "#FFB6C1 (Light Pink)",
+                "#FFE4E1 (Misty Rose)",
+                "#FFFACD (Lemon Chiffon)",
+                "#E0FFFF (Light Cyan)"
+              ],
+              "typography": {
+                "headings": "Georgia, Bold, 28-36px",
+                "body": "Arial, Regular, 14-18px",
+                "accents": "Verdana, Italic"
+              },
+              "layout_guidelines": "Use clean and symmetrical layouts with soft pastel backgrounds. Focus on close-up shots of the product to highlight its texture and color. Maintain a warm and inviting feel with generous white space.",
+              "design_rationale": "The 'Everyday Elegance' concept is expressed through a soft pastel color palette and clean layouts that highlight the product's ease of use and natural beauty enhancement. The typography and design elements contribute to an inviting and relatable atmosphere, aligning with the product's integration into daily life."
+            }
+          ],
+          "design_system_recommendations": "Establish a master style guide with defined color codes, typography specifications, and layout principles. Create templates for recurring formats to ensure consistency. Develop a shared asset library for photographers and designers with approved visual elements. Implement regular design reviews to maintain alignment with brand guidelines.",
+          "creative_concepts": [
+            {
+              "concept_title": "Vegan Glamour Unveiled",
+              "concept_description": "This concept focuses on the luxurious and natural appeal of Dream JELLY TINT, highlighting its vegan ingredients and premium quality. The campaign will showcase glamorous, sophisticated visuals that resonate with the target audience's desire for high-end, ethical beauty products.",
+              "key_visuals": "Rich, velvet-like textures with deep jewel tones. Elegant models with flawless, radiant skin showcasing the vibrant lip tint against minimalist backdrops. Use of soft lighting to create a dreamy, ethereal atmosphere. Incorporate green and gold as accent colors to emphasize the natural, luxurious theme.",
+              "key_messaging": "Tagline: 'Unveil Your Natural Glamour.' Messaging to emphasize the dual benefits of luxury and ethics, focusing on the vegan, cruelty-free nature of the product without sacrificing opulence.",
+              "channels": [
+                "Instagram sponsorships",
+                "TikTok advertising",
+                "Facebook Page engagement campaigns"
+              ]
+            },
+            {
+              "concept_title": "Boldly Natural",
+              "concept_description": "This concept embraces boldness and self-expression through vibrant colors and dynamic visuals that appeal to the modern, socially-active woman. It positions Dream JELLY TINT as the go-to choice for those who want to make a statement while sticking to natural ingredients.",
+              "key_visuals": "Bright, bold color palette with vibrant reds, pinks, and oranges. High-energy, dynamic shots of diverse models applying the lip tint in everyday, relatable settings. Use of natural elements like flowers or fruits to symbolize the product's natural ingredients.",
+              "key_messaging": "Tagline: 'Naturally Bold, Unapologetically You.' Messaging to focus on empowerment and self-expression, encouraging women to embrace their individuality while choosing ethical beauty products.",
+              "channels": [
+                "TikTok advertising",
+                "Instagram carousel posts",
+                "Interactive Facebook Live sessions"
+              ]
+            },
+            {
+              "concept_title": "Everyday Elegance",
+              "concept_description": "This concept focuses on integrating the luxurious feel of Dream JELLY TINT into the everyday life of the target audience. It highlights the product as an essential part of a daily routine that enhances natural beauty effortlessly.",
+              "key_visuals": "Soft, pastel color palette with a focus on natural, everyday settings. Models in casual, chic outfits showcasing the lip tint as part of their daily routine. Use of close-up shots to highlight the product's texture and color payoff.",
+              "key_messaging": "Tagline: 'Elegance, Every Day.' Messaging to convey the ease of incorporating luxury into daily life with Dream JELLY TINT, emphasizing its moisturizing benefits and vibrant colors.",
+              "channels": [
+                "Instagram stories",
+                "Facebook Page posts",
+                "TikTok influencer collaborations"
+              ]
+            }
+          ],
+          "rationale": "These concepts align with the campaign objectives by targeting affluent women who value luxury and ethical beauty products. The concepts leverage the visual appeal and ethical positioning of Dream JELLY TINT to create engaging content suitable for social media, helping to achieve high engagement and sales targets. Each concept offers a unique angle - glamour, boldness, and everyday elegance - to attract diverse segments within the target audience, ensuring broad appeal and effective brand communication.",
+          "campaign_objectives": {
+            "product_name": "Dream JELLY TINT",
+            "target_audience": "Affluent women aged 25-40 in Thailand who prioritize high-end cosmetics with natural and vegan ingredients, and are active on social media platforms such as TikTok, Instagram, and Facebook.",
+            "key_messaging": "Dream JELLY TINT offers a luxurious lip experience with its long-lasting formula that moisturizes while adding vibrant color. Ideal for the modern woman who values high-quality, cruelty-free products without sacrificing style.",
+            "primary_goals": [
+              "Achieve 5,000 unit sales within the first month of launch",
+              "Generate 100,000 impressions on social media platforms during the first 8-week campaign period",
+              "Expand brand awareness to reach 50,000 unique users in Thailand through online marketing efforts"
+            ],
+            "secondary_goals": [
+              "Grow social media followers by 15% across all platforms",
+              "Increase engagement rate by 10% through interactive content and promotions",
+              "Collect 500+ customer reviews by the end of the campaign"
+            ],
+            "success_metrics": [
+              "Conversion rate (target: 4%)",
+              "Cost per acquisition (target: under 150 Baht)",
+              "Social media engagement rate (target: 5%)",
+              "Customer review rating (target: 4.5 stars and above)"
+            ],
+            "timeline": "8-week campaign: Weeks 1-2: Teaser and influencer collaborations; Weeks 3-4: Product launch and social media blitz; Weeks 5-6: Interactive content and live demos; Weeks 7-8: Retargeting ads and user-generated content sharing",
+            "budget_considerations": "Total budget: 200,000 Baht. Social media advertising: 40% (80,000 Baht); Influencer partnerships: 30% (60,000 Baht); Content creation: 20% (40,000 Baht); Events and promotions: 10% (20,000 Baht)",
+            "channels": [
+              "TikTok advertising",
+              "Instagram sponsorships",
+              "Facebook Page engagement campaigns"
+            ]
+          },
+          "approval_feedback": {
+            "campaign_objectives": {
+              "product_name": "Dream JELLY TINT",
+              "target_audience": "Affluent women aged 25-40 in Thailand who prioritize high-end cosmetics with natural and vegan ingredients, and are active on social media platforms such as TikTok, Instagram, and Facebook.",
+              "key_messaging": "Dream JELLY TINT offers a luxurious lip experience with its long-lasting formula that moisturizes while adding vibrant color. Ideal for the modern woman who values high-quality, cruelty-free products without sacrificing style.",
+              "primary_goals": [
+                "Achieve 5,000 unit sales within the first month of launch",
+                "Generate 100,000 impressions on social media platforms during the first 8-week campaign period",
+                "Expand brand awareness to reach 50,000 unique users in Thailand through online marketing efforts"
+              ],
+              "secondary_goals": [
+                "Grow social media followers by 15% across all platforms",
+                "Increase engagement rate by 10% through interactive content and promotions",
+                "Collect 500+ customer reviews by the end of the campaign"
+              ],
+              "success_metrics": [
+                "Conversion rate (target: 4%)",
+                "Cost per acquisition (target: under 150 Baht)",
+                "Social media engagement rate (target: 5%)",
+                "Customer review rating (target: 4.5 stars and above)"
+              ],
+              "timeline": "8-week campaign: Weeks 1-2: Teaser and influencer collaborations; Weeks 3-4: Product launch and social media blitz; Weeks 5-6: Interactive content and live demos; Weeks 7-8: Retargeting ads and user-generated content sharing",
+              "budget_considerations": "Total budget: 200,000 Baht. Social media advertising: 40% (80,000 Baht); Influencer partnerships: 30% (60,000 Baht); Content creation: 20% (40,000 Baht); Events and promotions: 10% (20,000 Baht)",
+              "channels": [
+                "TikTok advertising",
+                "Instagram sponsorships",
+                "Facebook Page engagement campaigns"
+              ]
+            }
+          },
+          "raw_query": "ต้องการแคมเปญการตลาดสำหรับลิปสติกไลน์ใหม่: • ชื่อ ผลิตภัณ: Dream JELLY TINT •ตลาดระดับพรีเมียม, ราคาชิ้นละ 1000 บาท • คุณสมบัติหลัก: สูตรติดทนนานแต่ให้ความชุ่มชื้น,เนื้อบางเบา • ส่วนผสม: ผลิตจากธรรมชาติ, วีแกน, ไม่ทดลองกับสัตว์ • มีให้เลือก 15 สี • กลุ่มเป้าหมาย: ผู้หญิงอายุ 25-40 ปีที่ซื้อเครื่องสำอางพรีเมียม • งบประมาณทำการตลาด: 200,000 บาท • ระยะเวลา: เปิดตัวใน 8 สัปดาห์ • Channel: TIKTOK, IG, FACEBOOK PAGE • ต้องการแผนแคมเปญแบบเต็มรูปแบบ\n\n"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Data Storage: Content Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Storage: Content Input": {
+      "main": [
+        [
+          {
+            "node": "Search Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Language Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Content Creator Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Data Storage: Content Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Creator Agent": {
+      "main": [
+        [
+          {
+            "node": "JSON to Document Converter Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Language Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "JSON to Document Converter Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON to Document Converter Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Google Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Folder": {
+      "main": [
+        [
+          {
+            "node": "Content Creator Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "Workflow Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9a9a93ee-902b-468c-b287-bd04552357ba",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "23390975537aad780256c73dac50d79295eb4a317a3325529b1a7af134ef73c5"
+  },
+  "id": "61xViv9XcTOAtPaS",
+  "tags": []
+}

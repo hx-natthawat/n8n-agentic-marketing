@@ -1,0 +1,251 @@
+{
+  "name": "Agentic Marketing - Creative Director",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "fca87d90-b217-4ae5-bdaf-3105c3b7a9a7",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        80,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "name": "brand_guidelines",
+        "description": "Use this tool to retrieve brand guidelines for a specific brand or industry. Provide the brand name to get detailed guidelines."
+      },
+      "id": "0480206b-a9e5-4c8f-bba3-957d4f78dc29",
+      "name": "Brand Guidelines Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "position": [
+        540,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "name": "visual_reference",
+        "description": "Use this tool to get visual inspiration and reference materials for different design styles. Provide a theme or style to get visual references."
+      },
+      "id": "11e90bb3-ad76-4a23-850f-708fd2729e5a",
+      "name": "Visual Reference Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "position": [
+        660,
+        320
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        300,
+        320
+      ],
+      "id": "bae8aa7e-b264-44d3-a177-42d6d2e69cff",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "2cAtVcN7wisKXhHj",
+          "name": "OpenAi Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "creative_concepts",
+              "value": "={{$json.output.parseJson().creative_concepts}}"
+            },
+            {
+              "name": "rationale",
+              "value": "={{$json.output.parseJson().rationale}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "47ea9e1b-311e-4a54-ac27-9a077695a384",
+      "name": "Workflow Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        860,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$input.item.json.campaign_objectives}}",
+        "options": {
+          "systemMessage": "=You are the Creative Director for a product marketing campaign. Your expertise is in developing innovative creative concepts that align with marketing objectives and brand guidelines.\n\nWhen presented with campaign objectives, follow these steps:\n1. Use the brand_guidelines tool to understand the brand's voice, tone, and visual identity\n2. Use the visual_reference tool to gather inspiration for visual concepts\n3. Based on this research, develop 3 distinct creative concepts that align with the objectives and guidelines\n\n### CRITICAL INSTRUCTION: YOUR ENTIRE RESPONSE MUST BE VALID JSON ONLY\nDo not include any explanatory text, markdown formatting, or natural language outside the JSON structure.\nDo not prefix your response with ```json or any other markers.\nDo not include any text after the JSON.\n\nYour response must be a single JSON object with this exact structure:\n{\n  \"creative_concepts\": [\n    {\n      \"concept_title\": \"string value\",\n      \"concept_description\": \"string value\",\n      \"key_visuals\": \"string value\",\n      \"key_messaging\": \"string value\",\n      \"channels\": [\"string1\", \"string2\", \"string3\"]\n    },\n    {\n      \"concept_title\": \"string value\",\n      \"concept_description\": \"string value\",\n      \"key_visuals\": \"string value\",\n      \"key_messaging\": \"string value\",\n      \"channels\": [\"string1\", \"string2\", \"string3\"]\n    },\n    {\n      \"concept_title\": \"string value\",\n      \"concept_description\": \"string value\",\n      \"key_visuals\": \"string value\",\n      \"key_messaging\": \"string value\",\n      \"channels\": [\"string1\", \"string2\", \"string3\"]\n    }\n  ],\n  \"rationale\": \"string value\"\n}\n\nField requirements:\n- concept_title: (string) A catchy, memorable title for the creative concept that captures its essence.\n  Example: \"Timeless Elegance Unleashed\"\n\n- concept_description: (string) A detailed explanation of the creative concept, including its theme, mood, and overall approach.\n  Example: \"A sophisticated campaign that contrasts classic beauty standards with modern self-expression, featuring elegant black and white photography with selective color highlighting the product.\"\n\n- key_visuals: (string) Detailed description of the visual elements, style, color palette, and imagery to be used.\n  Example: \"Minimalist compositions with high contrast black and white photography. Models posed in classical art positions but with modern styling. Product featured with a splash of vibrant color against monochrome backgrounds. Clean typography with gold accents.\"\n\n- key_messaging: (string) The core messages, taglines, and copy direction for the concept.\n  Example: \"Tagline: 'Classic Beauty, Modern Expression.' Copy focuses on the duality of timeless elegance and contemporary self-expression. Emphasizes how the product bridges traditional beauty with modern needs.\"\n\n- channels: (array of strings) List of specific marketing channels where this concept would be most effective.\n  Example: [\"Print magazine spreads in Vogue and Elle\", \"Instagram carousel posts and stories\", \"Large-format outdoor billboards in urban centers\", \"Video content for YouTube and TikTok\"]\n\n- rationale: (string) Explanation of how these concepts align with the campaign objectives and brand guidelines.\n  Example: \"These three concepts strategically address different aspects of the brand positioning while maintaining a cohesive luxury feel. Each concept targets the core demographic through different emotional appeals - nostalgia, aspiration, and empowerment - while ensuring the product benefits are consistently highlighted across all executions.\"\n\nYour creative concepts should be distinct from each other, offering the client different strategic approaches to choose from. Each concept should be fully developed and ready for presentation, with clear visual direction and messaging that aligns with the brand guidelines and campaign objectives."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        392,
+        100
+      ],
+      "id": "0f0fcf3d-b0c6-4ebd-8c2d-f9a386ff60d5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        420,
+        320
+      ],
+      "id": "2a3986fe-c72b-44fa-ad96-9a5453639e86",
+      "name": "Window Buffer Memory",
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        0
+      ],
+      "id": "77ab6edd-f454-478c-9912-0a0eaea4a946",
+      "name": "When clicking ‘Test workflow’",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"query\": \"{\\\"target_audience\\\":\\\"Women aged 25-40 who are trend-savvy, value premium quality in makeup products, seek natural, vegan, and cruelty-free options, and are willing to spend more for long-lasting benefits.\\\",\\\"key_messaging\\\":\\\"Our new lipstick line offers a luxurious blend of long-lasting wear and moisturizing comfort, crafted with natural, vegan ingredients. Perfect for discerning women who value ethical and high-quality beauty solutions.\\\",\\\"primary_goals\\\":[\\\"Achieve 15,000 unit sales within the first quarter\\\",\\\"Boost brand social media following by 30% in the first three months\\\",\\\"Secure placement in 100 high-end retail outlets by the end of Q2\\\"],\\\"secondary_goals\\\":[\\\"Increase email newsletter sign-ups by 20%\\\",\\\"Gather over 200 reviews on major beauty platforms within two months\\\",\\\"Establish two strategic partnerships with beauty influencers\\\"],\\\"success_metrics\\\":[\\\"Sales conversion rate (target: 4%)\\\",\\\"Cost per acquisition (target: less than $30)\\\",\\\"Social media engagement rate (target: 5%)\\\",\\\"Customer satisfaction score (target: 9/10)\\\"],\\\"timeline\\\":\\\"8-week campaign: Weeks 1-2: Pre-launch buzz through teasers and influencer engagement; Weeks 3-4: Official launch with digital blitz and in-store promotions; Weeks 5-8: Engage through user-generated content, loyalty programs, and retargeting ads.\\\",\\\"budget_considerations\\\":\\\"Total budget: $120,000. Digital advertising: 35% ($42,000); Influencer partnerships: 25% ($30,000); In-store promotions and sampling: 20% ($24,000); Content creation and PR: 20% ($24,000)\\\",\\\"channels\\\":[\\\"Instagram and TikTok influencer collaborations\\\",\\\"Facebook and Google Ads\\\",\\\"Beauty and lifestyle blogs\\\",\\\"Email marketing campaigns\\\",\\\"In-store displays and promotions\\\"]}\",\n  \"campaign_objectives\": {\n    \"target_audience\": \"Women aged 25-40 who are trend-savvy, value premium quality in makeup products, seek natural, vegan, and cruelty-free options, and are willing to spend more for long-lasting benefits.\",\n    \"key_messaging\": \"Our new lipstick line offers a luxurious blend of long-lasting wear and moisturizing comfort, crafted with natural, vegan ingredients. Perfect for discerning women who value ethical and high-quality beauty solutions.\",\n    \"primary_goals\": [\n      \"Achieve 15,000 unit sales within the first quarter\",\n      \"Boost brand social media following by 30% in the first three months\",\n      \"Secure placement in 100 high-end retail outlets by the end of Q2\"\n    ],\n    \"secondary_goals\": [\n      \"Increase email newsletter sign-ups by 20%\",\n      \"Gather over 200 reviews on major beauty platforms within two months\",\n      \"Establish two strategic partnerships with beauty influencers\"\n    ],\n    \"success_metrics\": [\n      \"Sales conversion rate (target: 4%)\",\n      \"Cost per acquisition (target: less than $30)\",\n      \"Social media engagement rate (target: 5%)\",\n      \"Customer satisfaction score (target: 9/10)\"\n    ],\n    \"timeline\": \"8-week campaign: Weeks 1-2: Pre-launch buzz through teasers and influencer engagement; Weeks 3-4: Official launch with digital blitz and in-store promotions; Weeks 5-8: Engage through user-generated content, loyalty programs, and retargeting ads.\",\n    \"budget_considerations\": \"Total budget: $120,000. Digital advertising: 35% ($42,000); Influencer partnerships: 25% ($30,000); In-store promotions and sampling: 20% ($24,000); Content creation and PR: 20% ($24,000)\",\n    \"channels\": [\n      \"Instagram and TikTok influencer collaborations\",\n      \"Facebook and Google Ads\",\n      \"Beauty and lifestyle blogs\",\n      \"Email marketing campaigns\",\n      \"In-store displays and promotions\"\n    ]\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        0
+      ],
+      "id": "2bce83ad-aa54-4b43-883c-b0d0129c0e0d",
+      "name": "Edit Fields",
+      "disabled": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brand Guidelines Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Visual Reference Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Workflow Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "22741bbe-2f86-4a65-b759-38acbeb92bac",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "23390975537aad780256c73dac50d79295eb4a317a3325529b1a7af134ef73c5"
+  },
+  "id": "xxMGPJJnTFZY0tFa",
+  "tags": []
+}

@@ -1,0 +1,676 @@
+{
+  "name": "Agentic Marketing - Graphic Designer",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "e378ad99-431c-4c64-930e-cfced257ec31",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        20,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "creative_concepts",
+              "value": "={{$json.creative_concepts}}"
+            },
+            {
+              "name": "rationale",
+              "value": "={{$json.rationale}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7996ca5b-8237-4129-b3b5-33ed27fe6900",
+      "name": "Data Storage: Creative Concepts Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        580,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        340
+      ],
+      "id": "64f3c029-9bed-46fe-af50-281f3b70cee8",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "2cAtVcN7wisKXhHj",
+          "name": "OpenAi Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "brand_guidelines",
+        "description": "Use this tool to retrieve brand guidelines for a specific brand or industry. Provide the brand name to get detailed guidelines."
+      },
+      "id": "5b0ffabf-3180-4806-9b79-fe3116f99ee8",
+      "name": "Brand Guidelines Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "position": [
+        1320,
+        420
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$('Data Storage: Creative Concepts Input').item.json.creative_concepts}}",
+        "options": {
+          "systemMessage": "=You are the Graphic Designer for a product marketing campaign. Your expertise is in creating visual designs that bring creative concepts to life.\n\nWhen presented with creative concepts, follow these steps:\n1. Use the brand_guidelines tool to understand the brand's visual identity standards.\n2. For each creative concept, develop detailed design specifications.\n3. Create Gemini 2.0 Flash prompts for generating visual mockups for each concept.\n\n### CRITICAL INSTRUCTION: YOUR ENTIRE RESPONSE MUST BE VALID JSON ONLY\nDo not include any explanatory text, markdown formatting, or natural language outside the JSON structure.\nDo not prefix your response with ```json or any other markers.\nDo not include any text after the JSON.\n\nYour response must be a single JSON object with this exact structure:\n{\n  \"design_assets\": [\n    {\n      \"concept_title\": \"string value\",\n      \"mockup_descriptions\": [\n        {\n          \"channel\": \"string value\",\n          \"description\": \"string value\",\n          \"gemini_prompt\": \"string value\"\n        }\n      ],\n      \"color_palette\": [\"string1\", \"string2\", \"string3\"],\n      \"typography\": {\n        \"headings\": \"string value\",\n        \"body\": \"string value\",\n        \"accents\": \"string value\"\n      },\n      \"layout_guidelines\": \"string value\",\n      \"design_rationale\": \"string value\"\n    }\n  ],\n  \"design_system_recommendations\": \"string value\"\n}\n\nField requirements:\n- design_assets: (array of objects) One object for each creative concept, containing detailed design specifications.\n\n- concept_title: (string) The title of the creative concept this design is based on.\n  Example: \"Eco-Chic Glamour\"\n\n- mockup_descriptions: (array of objects) Descriptions for visual mockups to be created, one for each relevant channel.\n  Each object should include:\n  - channel: (string) The marketing channel this mockup is for (e.g., \"Instagram Post\", \"Website Banner\", \"Print Ad\")\n  - description: (string) Detailed description of the mockup design\n  - gemini_prompt: (string) A detailed prompt for Gemini 2.0 Flash to generate this mockup\n\n- color_palette: (array of strings) 4-6 specific colors with hex codes that will be used in the design.\n  Example: [\"#F8B195 (Soft Coral)\", \"#F67280 (Dusty Rose)\", \"#C06C84 (Mauve)\", \"#6C5B7B (Deep Lavender)\", \"#355C7D (Teal Blue)\"]\n\n- typography: (object) Font specifications for different text elements.\n  - headings: (string) Font family, weight, and size range for headlines\n  - body: (string) Font family, weight, and size range for body copy\n  - accents: (string) Font family for callouts or special text elements\n\n- layout_guidelines: (string) Principles for arranging visual elements across different formats.\n  Example: \"Use asymmetrical layouts with generous white space. Place product imagery as focal point with supporting elements arranged in a Z-pattern reading flow. Maintain consistent margins of 5% of canvas width.\"\n\n- design_rationale: (string) Explanation of how this design approach supports the creative concept.\n  Example: \"This design system translates the 'Eco-Chic Glamour' concept through a sophisticated color palette that balances earthy tones with luxurious accents. The typography choices combine elegance with readability, while the layout approach ensures the sustainable messaging is highlighted alongside the product's premium positioning.\"\n\n- design_system_recommendations: (string) Overall recommendations for maintaining visual consistency across all concepts.\n  Example: \"Establish a master style guide with the defined color codes, typography specifications, and layout principles. Create templates for recurring formats to ensure consistency. Develop a shared asset library for photographers and designers with approved visual elements. Implement regular design reviews to maintain alignment with brand guidelines.\"\n\n## GEMINI PROMPT GUIDELINES\n\n1. START WITH CLEAR CONTENT TYPE: Begin with “Create a photorealistic marketing mockup of [specific content]”.\n\n2. SPECIFY FORMAT AND DIMENSIONS: Include exact format and dimensions for the channel (e.g., “Instagram post in 1:1 square format”, “Instagram Reel cover in 9:16 vertical format”, “horizontal website banner”).\n\n3. DESCRIBE VISUAL ELEMENTS IN DETAIL:\n\nMain subject positioning and appearance, ensuring appropriateness for all audiences.\nBackground style and elements, avoiding any suggestive or sensitive content.\nText placement (avoid including actual text).\nUse color schemes with specific hex codes for guidance, but do not visually represent hex codes in the image.\n\n4. SPECIFY STYLE AND MOOD: Include photography style, lighting, and mood descriptors (e.g., “bright and airy lifestyle photography”, “dramatic studio lighting with deep shadows”). Ensure the mood is universally appropriate.\n\n5. MENTION TECHNICAL ASPECTS: Include “high resolution”, “professional product photography”, “clean composition”.\n\n6. AVOID REQUESTING:\n\nText overlays (Gemini struggles with text rendering).\nMultiple frames or sequences.\nSpecific brand logos.\nExtremely complex layouts with many elements.\nAny content that might be considered inappropriate or controversial.\n\n\n7. CHANNEL-SPECIFIC GUIDELINES:\n\nInstagram Reel: Ensure vertical 9:16 format, focus on a single compelling image, suitable as a cover.\nInstagram Post: Use square 1:1 format, emphasize product and lifestyle imagery.\nFacebook Page: Use horizontal 16:9 format, balance product and promotional messaging.\nTikTok: Vertical 9:16 format, dynamic and engaging composition.\n\n8. FEEDBACK LOOP: Review generated images and refine prompts as needed to better align with brand guidelines and creative concepts.\n\n9. ERROR HANDLING: If the output is unsatisfactory, adjust the prompt parameters and retry.\n\nExample Gemini Prompt: “Create a photorealistic marketing mockup of a premium lipstick product for an Instagram post in 1:1 square format. The lipstick should be positioned at a 45-degree angle in the center-right of the frame against a soft gradient background. Include a small arrangement of natural elements (e.g., rose petals, shea butter) in the bottom left corner. Use bright, airy lifestyle photography with soft diffused lighting to convey a premium feel. The overall composition should be clean and minimal with ample negative space. High resolution, professional product photography with a shallow depth of field.”"
+        }
+      },
+      "id": "6bd23c48-4fd5-4d66-8376-104e222c4ee5",
+      "name": "Graphic Designer Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        1260,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "design_assets",
+              "value": "={{$('Graphic Designer Agent').item.json.output.parseJson().design_assets}}"
+            },
+            {
+              "name": "design_system_recommendations",
+              "value": "={{$('Graphic Designer Agent').item.json.output.parseJson().design_system_recommendations}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4c33a2bc-fe5c-4a8e-bbe1-420022e7fa4a",
+      "name": "Data Storage: Design Assets",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2720,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "status",
+              "value": "completed"
+            },
+            {
+              "name": "design_assets",
+              "value": "={{ $('Data Storage: Design Assets').item.json.design_assets }}"
+            },
+            {
+              "name": "design_system_recommendations",
+              "value": "={{ $('Data Storage: Design Assets').item.json.design_system_recommendations }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2cba072a-cdf7-47b5-b759-2dfe43e83f6a",
+      "name": "Workflow Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        4060,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n    \"creative_concepts\": [\n      {\n        \"concept_title\": \"Nature's Embrace\",\n        \"concept_description\": \"This campaign focuses on the purity and safety of GentleCare products, highlighting their organic and hypoallergenic nature. The theme centers around a nurturing embrace of nature, using soft pastel colors and imagery of natural elements like leaves and water to convey trust and care.\",\n        \"key_visuals\": \"Soft pastel color palette with greens, blues, and creams. Imagery features serene landscapes, close-ups of natural elements like leaves and water, and smiling babies enveloped in soft, organic fabrics. Typography is gentle and rounded, emphasizing comfort and care.\",\n        \"key_messaging\": \"Tagline: 'Embrace the Natural Choice.' Messaging focuses on the organic and safe attributes of the products, appealing to health-conscious parents who want the best for their child.\",\n        \"channels\": [\n          \"Instagram and Facebook advertising\",\n          \"Influencer marketing on parenting blogs\",\n          \"Email marketing\"\n        ]\n      },\n      {\n        \"concept_title\": \"Urban Sanctuary\",\n        \"concept_description\": \"This concept aims to resonate with urban parents by presenting GentleCare as a sanctuary of safety and health amidst the hustle of city life. The campaign uses sleek, modern visuals paired with calming elements to create a sense of peace and assurance.\",\n        \"key_visuals\": \"A modern color palette with urban grays and soft blues. Visuals include cityscapes with a serene overlay, parents using the product in everyday urban settings, and close-ups of the product to highlight quality.\",\n        \"key_messaging\": \"Tagline: 'Your Child's Urban Oasis.' Messaging highlights the reliability and safety of the products, positioning them as a safe haven in busy urban environments.\",\n        \"channels\": [\n          \"Google Ads\",\n          \"Partnerships with pediatric clinics\",\n          \"Large-format outdoor billboards in urban centers\"\n        ]\n      },\n      {\n        \"concept_title\": \"Generations of Care\",\n        \"concept_description\": \"This campaign draws on emotional storytelling, featuring multigenerational families to emphasize trust and tradition. It showcases how GentleCare products are a trusted choice for parents who want to pass down the value of quality care to their children.\",\n        \"key_visuals\": \"Warm, inviting color palette with earth tones. Imagery includes multigenerational family interactions, highlighting shared moments and the passing of wisdom. Use of vintage-style photography to evoke nostalgia and trust.\",\n        \"key_messaging\": \"Tagline: 'Caring for Generations.' Messaging emphasizes the tradition of caring and the peace of mind that comes with using products trusted by families for generations.\",\n        \"channels\": [\n          \"Email marketing\",\n          \"Print magazine spreads in parenting and lifestyle magazines\",\n          \"Influencer marketing with family-focused content creators\"\n        ]\n      }\n    ],\n    \"rationale\": \"These three creative concepts offer distinct approaches to connect with health-conscious urban parents, aligning with GentleCare's brand values and campaign objectives. 'Nature's Embrace' appeals to those who value organic and natural care, 'Urban Sanctuary' targets city dwellers seeking safe products amidst urban chaos, and 'Generations of Care' leverages emotional storytelling to build trust and tradition. Each concept strategically utilizes different channels to maximize reach and engagement within the target audience, ensuring a comprehensive and effective marketing campaign.\",\n    \"status\": \"approved\",\n    \"campaign_objectives\": {\n      \"product_name\": \"GentleCare 1-Year-Old Essentials Kit\",\n      \"target_audience\": \"Parents aged 25-40, with a middle to high income level, who are health-conscious and prioritize safety and quality in products for their toddlers. They are primarily urban dwellers who value recommendations from trusted sources, and actively seek products with organic ingredients.\",\n      \"key_messaging\": \"GentleCare provides the ultimate in safety and comfort for your one-year-old, with organic and pediatrician-approved products. Ensure your child's happiness and health with our gentle, hypoallergenic care solutions.\",\n      \"primary_goals\": [\n        \"Achieve 5,000 product sales within the first six months\",\n        \"Increase social media followers by 50% within 3 months\",\n        \"Establish partnerships with 50 pediatric clinics by the end of Q3\"\n      ],\n      \"secondary_goals\": [\n        \"Grow our email subscriber list by 30%\",\n        \"Secure at least 10 blog features or reviews\",\n        \"Engage 20 parenting influencers for authentic promotion\"\n      ],\n      \"success_metrics\": [\n        \"Conversion rate (target: 4%)\",\n        \"Customer acquisition cost (target: under $15)\",\n        \"Social media engagement rate (target: 5%)\",\n        \"Customer satisfaction score (target: 90+)\"\n      ],\n      \"timeline\": \"6-month campaign: Months 1-2: Pre-launch awareness and influencer collaboration; Months 3-4: Product launch and digital marketing push; Months 5-6: Retention and loyalty programs.\",\n      \"budget_considerations\": \"Total budget: $100,000. Digital marketing and advertising: 30% ($30,000); Influencer partnerships: 35% ($35,000); Content creation: 20% ($20,000); In-store promotions: 15% ($15,000)\",\n      \"channels\": [\n        \"Instagram and Facebook advertising\",\n        \"Google Ads\",\n        \"Email marketing\",\n        \"Partnerships with pediatric clinics\",\n        \"Influencer marketing on parenting blogs\"\n      ]\n    },\n    \"approval_feedback\": {\n      \"campaign_objectives\": {\n        \"product_name\": \"GentleCare 1-Year-Old Essentials Kit\",\n        \"target_audience\": \"Parents aged 25-40, with a middle to high income level, who are health-conscious and prioritize safety and quality in products for their toddlers. They are primarily urban dwellers who value recommendations from trusted sources, and actively seek products with organic ingredients.\",\n        \"key_messaging\": \"GentleCare provides the ultimate in safety and comfort for your one-year-old, with organic and pediatrician-approved products. Ensure your child's happiness and health with our gentle, hypoallergenic care solutions.\",\n        \"primary_goals\": [\n          \"Achieve 5,000 product sales within the first six months\",\n          \"Increase social media followers by 50% within 3 months\",\n          \"Establish partnerships with 50 pediatric clinics by the end of Q3\"\n        ],\n        \"secondary_goals\": [\n          \"Grow our email subscriber list by 30%\",\n          \"Secure at least 10 blog features or reviews\",\n          \"Engage 20 parenting influencers for authentic promotion\"\n        ],\n        \"success_metrics\": [\n          \"Conversion rate (target: 4%)\",\n          \"Customer acquisition cost (target: under $15)\",\n          \"Social media engagement rate (target: 5%)\",\n          \"Customer satisfaction score (target: 90+)\"\n        ],\n        \"timeline\": \"6-month campaign: Months 1-2: Pre-launch awareness and influencer collaboration; Months 3-4: Product launch and digital marketing push; Months 5-6: Retention and loyalty programs.\",\n        \"budget_considerations\": \"Total budget: $100,000. Digital marketing and advertising: 30% ($30,000); Influencer partnerships: 35% ($35,000); Content creation: 20% ($20,000); In-store promotions: 15% ($15,000)\",\n        \"channels\": [\n          \"Instagram and Facebook advertising\",\n          \"Google Ads\",\n          \"Email marketing\",\n          \"Partnerships with pediatric clinics\",\n          \"Influencer marketing on parenting blogs\"\n        ]\n      }\n    },\n    \"raw_query\": \"Baby care เด็ก 1 ขวบ\"\n  }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        60
+      ],
+      "id": "a262302c-86c3-4d45-a9cc-d0b9fe361c94",
+      "name": "Edit Fields",
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "5c1180e0-14d5-4896-b7ea-33bc3c09f29e",
+      "name": "When clicking ‘Test workflow’",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// This function will process the design assets and generate DALL-E prompts\n// for each mockup description\n\nconst designAssets = $input.first().json.design_assets\nconst mockupPrompts = [];\n\n// Extract all DALL-E prompts from the design assets\nfor (const asset of designAssets) {\n  const conceptTitle = asset.concept_title;\n  \n  for (const mockup of asset.mockup_descriptions) {\n    mockupPrompts.push({\n      concept: conceptTitle,\n      channel: mockup.channel,\n      prompt: mockup.gemini_prompt\n    });\n  }\n}\n\nreturn {\n  mockup_prompts: mockupPrompts,\n  design_assets: designAssets\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2940,
+        100
+      ],
+      "id": "08fc2c8f-4489-4f74-86f8-09b5ac747e04",
+      "name": "Extract DALL-E Prompts"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "mockup_prompts",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        3140,
+        100
+      ],
+      "id": "93c84f83-111d-42dc-94fd-c97e8457bf6c",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=AIzaSyCXsui90A8dtMD1ucuaCpFLOMtI8ifYZhI",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"contents\": [{\n      \"parts\": [\n        {\"text\": \"{{ $json.prompt }}\" }\n      ]\n    }],\n    \"generationConfig\":{\"responseModalities\":[\"Text\",\"Image\"]}\n  }",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3360,
+        100
+      ],
+      "id": "4b8f5ce0-4713-4381-9bb1-4c8397171784",
+      "name": "HTTP Request",
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "candidates[0].content.parts[1].inlineData.data",
+        "binaryPropertyName": "=data",
+        "options": {
+          "fileName": "={{ $('Split Out').item.json.concept }}_{{ $('Split Out').item.json.channel }}",
+          "mimeType": "={{ $json.candidates[0].content.parts[1].inlineData.mimeType }}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        3580,
+        100
+      ],
+      "id": "8a9cfb54-7645-4dca-bff9-28b49738d361",
+      "name": "Convert to File",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Split Out').item.json.concept }}_{{ $('Split Out').item.json.channel }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Search Folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3800,
+        100
+      ],
+      "id": "aa4b4a88-4d41-4343-98f4-257a98a3db2d",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "6WyTXq7YUX3HcPuZ",
+          "name": "Google Drive account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "=[Marketing Documents] {{ $('When Executed by Another Workflow').item.json.campaign_objectives.product_name }}",
+        "limit": 1,
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        900,
+        100
+      ],
+      "id": "9be969e7-952b-42c2-bd47-3172cab16609",
+      "name": "Search Folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "6WyTXq7YUX3HcPuZ",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "id": "f59c0650-ddde-41e9-b412-60229967c11a",
+      "name": "Language Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1680,
+        360
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "2cAtVcN7wisKXhHj",
+          "name": "OpenAi Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Raw query: {{ $('When Executed by Another Workflow').item.json.raw_query }}\n-----------------------\nResponse from Social Media Manager Agent\n{{ $json.output }}",
+        "options": {
+          "systemMessage": "=# JSON to Document Converter Agent for Creative Concepts\n\nYou are the JSON to Document Converter Agent for a product marketing campaign. Your role is to transform structured creative concepts JSON content into comprehensive documents that designers and content creators can utilize effectively. When presented with JSON data, extract and organize the information into a clear and actionable document format.\n\n### INPUT\nYou will receive a JSON array of creative concepts with the following structure:\n```json\n[\n  {\n    \"concept_title\": \"string value\",\n    \"mockup_descriptions\": [\n      {\n        \"channel\": \"string value\",\n        \"description\": \"string value\",\n        \"gemini_prompt\": \"string value\"\n      }\n    ],\n    \"color_palette\": [\n      \"string value (hex code)\"\n    ],\n    \"typography\": {\n      \"headings\": \"string value\",\n      \"body\": \"string value\",\n      \"accents\": \"string value\"\n    },\n    \"layout_guidelines\": \"string value\",\n    \"design_rationale\": \"string value\"\n  }\n]\n```\n\n### PROCESS\nWhen presented with the creative concepts JSON data, follow these steps:\n1. Detect the language from the raw query and set it as the output language\n2. Extract each creative concept from the JSON and convert it into a detailed section in the document\n3. Format the data into a clear, concise, and actionable document\n4. Ensure that each section is well-structured and includes all necessary details for designers and content creators\n5. **Translate all content into the detected language**, ensuring translations maintain the original meaning and tone\n\n### OUTPUT\nYour response must be a well-formatted document with the following sections for each creative concept, translated into the detected language:\n\n#### Concept Title (ชื่อแนวคิด)\nThe name of the creative concept.\nExample: \"Natural Luxe\"\n\n#### Concept Overview (ภาพรวมแนวคิด)\nA summary of the design rationale for this concept.\nExample: \"This design system translates the 'Natural Luxe' concept through a sophisticated color palette that combines earthy tones with luxurious gold accents.\"\n\n#### Mockups by Channel (ภาพจำลองตามช่องทาง)\nFor each mockup description:\n\n##### Channel (ช่องทาง)\nThe marketing channel for which the mockup is intended.\nExample: \"Instagram and Facebook advertising\"\n\n##### Description (คำอธิบาย)\nDetailed description of the visual content.\nExample: \"A luxurious visual showcasing a model with radiant skin and vibrant lips in a natural setting.\"\n\n##### AI Generation Prompt (คำแนะนำสำหรับ AI)\nThe prompt used to generate the mockup with AI tools.\nExample: \"Create a photorealistic marketing mockup of a beauty product ad for Instagram in 1:1 square format...\"\n\n#### Design Elements (องค์ประกอบการออกแบบ)\n\n##### Color Palette (จานสี)\nThe hex codes for the color palette with color swatches.\nExample: \n- #D1C4B1 [SWATCH]\n- #A39081 [SWATCH]\n- #8D6E63 [SWATCH]\n- #705B53 [SWATCH]\n- #4E342E [SWATCH]\n\n##### Typography (การจัดวางตัวอักษร)\nFont specifications for different text elements.\nExample:\n- Headings: Playfair Display, Bold, 24-36px\n- Body: Lato, Regular, 14-18px\n- Accents: Cormorant Garamond\n\n##### Layout Guidelines (แนวทางการจัดวาง)\nInstructions for arranging elements in the design.\nExample: \"Utilize symmetrical layouts with rich textures. Place product imagery prominently with supporting elements arranged in an L-pattern reading flow.\"\n\n### FORMATTING GUIDELINES\n- Use clear, professional language\n- Include appropriate section headers\n- Use bullet points for lists where appropriate\n- Include placeholders for color swatches [SWATCH]\n- Format typography specifications consistently\n- Maintain consistent spacing and formatting throughout\n- **Translate all content fields into the detected language**, ensuring translations maintain the original meaning and tone\n\n### TRANSLATION GUIDELINES\n- Detect the language from the raw query and set it as the output language\n- If the raw query is in Thai, translate all content into Thai\n- If the raw query is in English, keep content in English\n- For other languages, translate accordingly\n- Maintain the original intent and tone of the content while translating\n- Keep technical terms, brand names, proper nouns, and hex codes in their original form\n- Ensure that translated content is culturally appropriate and natural-sounding\n\nThis structured approach ensures that designers and content creators have all the necessary information to produce high-quality, on-brand content for the marketing campaign."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1720,
+        100
+      ],
+      "id": "ccf426c8-d0ea-4719-8a9b-1afa46867db3",
+      "name": "JSON to Document Converter Agent"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "output",
+        "options": {
+          "fileName": "=Graphic Design Document_{{$now.format('yyyy-MM-dd')}}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2200,
+        80
+      ],
+      "id": "e31ffbe8-c70c-4447-83d7-af24f41482c7",
+      "name": "Convert to Graphic Design Documents"
+    },
+    {
+      "parameters": {
+        "name": "=Graphic Design Document_{{$now.format('yyyy-MM-dd')}}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Search Folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2460,
+        100
+      ],
+      "id": "e4bbd6ad-3016-4336-bc98-b1fe94b45c46",
+      "name": "Google Drive1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "6WyTXq7YUX3HcPuZ",
+          "name": "Google Drive account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "{\"campaign_objectives\":{\"product_name\":\"Elegance Line Lipstick\",\"target_audience\":\"Women aged 25-40 with a preference for premium, high-quality cosmetics who value long-lasting wear with moisturizing benefits. They are conscious about natural ingredients and ethical production, focusing on vegan and cruelty-free products.\",\"key_messaging\":\"Elegance Line Lipstick offers a luxurious and long-lasting formula that nourishes lips with natural ingredients, giving you the confidence to wear bold colors all day. Perfect for those who value quality and ethical beauty choices.\",\"primary_goals\":[\"Achieve 20,000 units sold within the first 3 months\",\"Reach 1,000,000 brand impressions across digital platforms within 8 weeks\",\"Establish partnerships with 100 premium retail outlets by the end of Q1\"],\"secondary_goals\":[\"Grow social media following by 50% within three months\",\"Increase email subscriber list to 20,000 contacts\",\"Obtain 500+ customer reviews with an average rating of 4.5 stars\"],\"success_metrics\":[\"Sales conversion rate of 5% from online channels\",\"Cost per acquisition under $30\",\"Social media engagement rate at 6%\",\"Average Order Value (AOV) of $60\",\"Customer satisfaction score of 90+\"],\"timeline\":\"8-week campaign: Weeks 1-2: Pre-launch awareness and influencer partnerships; Weeks 3-4: Official launch with digital ads and PR events; Weeks 5-6: Increased advertising spend and pop-up events; Weeks 7-8: Loyalty programs and user-generated content promotions\",\"budget_considerations\":\"Total budget: $120,000. Digital advertising: 35% ($42,000); Influencer partnerships: 25% ($30,000); Content creation: 20% ($24,000); PR and events: 20% ($24,000)\",\"channels\":[\"Instagram and Facebook advertising\",\"Influencer partnerships on beauty blogs and social media\",\"Google Display Network and YouTube ads\",\"Email marketing campaigns\",\"Collaborations with beauty subscription boxes\"]},\"creative_concepts\":[{\"concept_title\":\"Natural Elegance\",\"concept_description\":\"A campaign that emphasizes the natural, ethical, and luxurious aspects of the Elegance Line Lipstick. It features serene imagery and a calming color palette to convey purity and sophistication.\",\"key_visuals\":\"Soft-focus photography with pastel and earth tones. Images of models in natural settings, such as gardens or beaches, highlighting the lipstick's natural ingredients. Elegant typography with a touch of gold foil for a luxurious feel.\",\"key_messaging\":\"Tagline: 'Pure Beauty, Naturally Elegant.' Messaging focuses on the natural and ethical production of the lipstick, appealing to environmentally conscious consumers who value quality and sustainability.\",\"channels\":[\"Instagram and Facebook advertising\",\"Influencer partnerships on eco-conscious beauty blogs\",\"Email marketing campaigns\"]},{\"concept_title\":\"Bold and Beautiful\",\"concept_description\":\"This campaign highlights the bold color choices of the Elegance Line Lipstick, using vibrant visuals and dynamic layouts to capture attention. It's designed for confident, modern women who want their makeup to make a statement.\",\"key_visuals\":\"Bright, high-contrast visuals with bold typography. Models with strong, confident poses in urban settings. Lipstick shades showcased against stark, minimalist backgrounds to emphasize color vibrancy.\",\"key_messaging\":\"Tagline: 'Go Bold, Stay Beautiful.' The messaging encourages consumers to express themselves through vivid colors, with a focus on the lipstick's long-lasting formula and moisturizing benefits.\",\"channels\":[\"Google Display Network and YouTube ads\",\"Instagram carousel posts and stories\",\"Collaborations with beauty subscription boxes\"]},{\"concept_title\":\"Timeless Luxury\",\"concept_description\":\"A sophisticated campaign that positions the lipstick as a timeless luxury item. It blends classic elegance with modern trends, appealing to consumers who appreciate high-end, premium products.\",\"key_visuals\":\"Classic black and white photography with selective use of color to highlight the lipstick. Models dressed in vintage-inspired fashion, with a contemporary twist. Use of luxurious textures like silk and velvet in the imagery.\",\"key_messaging\":\"Tagline: 'Luxury That Lasts.' Messaging focuses on the lipstick's premium quality and long-lasting wear, appealing to consumers who appreciate the finer things in life.\",\"channels\":[\"Print magazine spreads in Vogue and Elle\",\"YouTube ads\",\"PR events and pop-up experiences\"]}],\"rationale\":\"These concepts address the campaign objectives by targeting the core demographic with distinct appeals: Natural Elegance for eco-conscious consumers, Bold and Beautiful for modern, confident women, and Timeless Luxury for those seeking premium products. Each concept utilizes the brand's strong identity to reinforce the product's benefits while strategically targeting specific channels to maximize reach and engagement. The diverse approaches ensure broad appeal while maintaining alignment with the brand's luxurious and ethical values.\"}",
+          "creative_concepts": {
+            "campaign_objectives": {
+              "product_name": "Elegance Line Lipstick",
+              "target_audience": "Women aged 25-40 with a preference for premium, high-quality cosmetics who value long-lasting wear with moisturizing benefits. They are conscious about natural ingredients and ethical production, focusing on vegan and cruelty-free products.",
+              "key_messaging": "Elegance Line Lipstick offers a luxurious and long-lasting formula that nourishes lips with natural ingredients, giving you the confidence to wear bold colors all day. Perfect for those who value quality and ethical beauty choices.",
+              "primary_goals": [
+                "Achieve 20,000 units sold within the first 3 months",
+                "Reach 1,000,000 brand impressions across digital platforms within 8 weeks",
+                "Establish partnerships with 100 premium retail outlets by the end of Q1"
+              ],
+              "secondary_goals": [
+                "Grow social media following by 50% within three months",
+                "Increase email subscriber list to 20,000 contacts",
+                "Obtain 500+ customer reviews with an average rating of 4.5 stars"
+              ],
+              "success_metrics": [
+                "Sales conversion rate of 5% from online channels",
+                "Cost per acquisition under $30",
+                "Social media engagement rate at 6%",
+                "Average Order Value (AOV) of $60",
+                "Customer satisfaction score of 90+"
+              ],
+              "timeline": "8-week campaign: Weeks 1-2: Pre-launch awareness and influencer partnerships; Weeks 3-4: Official launch with digital ads and PR events; Weeks 5-6: Increased advertising spend and pop-up events; Weeks 7-8: Loyalty programs and user-generated content promotions",
+              "budget_considerations": "Total budget: $120,000. Digital advertising: 35% ($42,000); Influencer partnerships: 25% ($30,000); Content creation: 20% ($24,000); PR and events: 20% ($24,000)",
+              "channels": [
+                "Instagram and Facebook advertising",
+                "Influencer partnerships on beauty blogs and social media",
+                "Google Display Network and YouTube ads",
+                "Email marketing campaigns",
+                "Collaborations with beauty subscription boxes"
+              ]
+            },
+            "creative_concepts": [
+              {
+                "concept_title": "Natural Elegance",
+                "concept_description": "A campaign that emphasizes the natural, ethical, and luxurious aspects of the Elegance Line Lipstick. It features serene imagery and a calming color palette to convey purity and sophistication.",
+                "key_visuals": "Soft-focus photography with pastel and earth tones. Images of models in natural settings, such as gardens or beaches, highlighting the lipstick's natural ingredients. Elegant typography with a touch of gold foil for a luxurious feel.",
+                "key_messaging": "Tagline: 'Pure Beauty, Naturally Elegant.' Messaging focuses on the natural and ethical production of the lipstick, appealing to environmentally conscious consumers who value quality and sustainability.",
+                "channels": [
+                  "Instagram and Facebook advertising",
+                  "Influencer partnerships on eco-conscious beauty blogs",
+                  "Email marketing campaigns"
+                ]
+              },
+              {
+                "concept_title": "Bold and Beautiful",
+                "concept_description": "This campaign highlights the bold color choices of the Elegance Line Lipstick, using vibrant visuals and dynamic layouts to capture attention. It's designed for confident, modern women who want their makeup to make a statement.",
+                "key_visuals": "Bright, high-contrast visuals with bold typography. Models with strong, confident poses in urban settings. Lipstick shades showcased against stark, minimalist backgrounds to emphasize color vibrancy.",
+                "key_messaging": "Tagline: 'Go Bold, Stay Beautiful.' The messaging encourages consumers to express themselves through vivid colors, with a focus on the lipstick's long-lasting formula and moisturizing benefits.",
+                "channels": [
+                  "Google Display Network and YouTube ads",
+                  "Instagram carousel posts and stories",
+                  "Collaborations with beauty subscription boxes"
+                ]
+              },
+              {
+                "concept_title": "Timeless Luxury",
+                "concept_description": "A sophisticated campaign that positions the lipstick as a timeless luxury item. It blends classic elegance with modern trends, appealing to consumers who appreciate high-end, premium products.",
+                "key_visuals": "Classic black and white photography with selective use of color to highlight the lipstick. Models dressed in vintage-inspired fashion, with a contemporary twist. Use of luxurious textures like silk and velvet in the imagery.",
+                "key_messaging": "Tagline: 'Luxury That Lasts.' Messaging focuses on the lipstick's premium quality and long-lasting wear, appealing to consumers who appreciate the finer things in life.",
+                "channels": [
+                  "Print magazine spreads in Vogue and Elle",
+                  "YouTube ads",
+                  "PR events and pop-up experiences"
+                ]
+              }
+            ],
+            "rationale": "These concepts address the campaign objectives by targeting the core demographic with distinct appeals: Natural Elegance for eco-conscious consumers, Bold and Beautiful for modern, confident women, and Timeless Luxury for those seeking premium products. Each concept utilizes the brand's strong identity to reinforce the product's benefits while strategically targeting specific channels to maximize reach and engagement. The diverse approaches ensure broad appeal while maintaining alignment with the brand's luxurious and ethical values."
+          },
+          "raw_query": "ต้องการแคมเปญการตลาดสำหรับลิปสติกไลน์ใหม่: • ชื่อ ผลิตภัณ: Dream JELLY TINT •ตลาดระดับพรีเมียม, ราคาชิ้นละ 1000 บาท • คุณสมบัติหลัก: สูตรติดทนนานแต่ให้ความชุ่มชื้น,เนื้อบางเบา • ส่วนผสม: ผลิตจากธรรมชาติ, วีแกน, ไม่ทดลองกับสัตว์ • มีให้เลือก 15 สี • กลุ่มเป้าหมาย: ผู้หญิงอายุ 25-40 ปีที่ซื้อเครื่องสำอางพรีเมียม • งบประมาณทำการตลาด: 200,000 บาท • ระยะเวลา: เปิดตัวใน 8 สัปดาห์ • Channel: TIKTOK, IG, FACEBOOK PAGE • ต้องการแผนแคมเปญแบบเต็มรูปแบบ"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Data Storage: Creative Concepts Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Storage: Creative Concepts Input": {
+      "main": [
+        [
+          {
+            "node": "Search Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Graphic Designer Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brand Guidelines Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Graphic Designer Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Graphic Designer Agent": {
+      "main": [
+        [
+          {
+            "node": "JSON to Document Converter Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Storage: Design Assets": {
+      "main": [
+        [
+          {
+            "node": "Extract DALL-E Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Data Storage: Creative Concepts Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract DALL-E Prompts": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Workflow Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Folder": {
+      "main": [
+        [
+          {
+            "node": "Graphic Designer Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Language Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "JSON to Document Converter Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON to Document Converter Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert to Graphic Design Documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to Graphic Design Documents": {
+      "main": [
+        [
+          {
+            "node": "Google Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "Data Storage: Design Assets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "dc22c609-1b7a-4365-88c0-849ffd50d0b7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "23390975537aad780256c73dac50d79295eb4a317a3325529b1a7af134ef73c5"
+  },
+  "id": "jhYZrlh8yFtUHHWU",
+  "tags": []
+}

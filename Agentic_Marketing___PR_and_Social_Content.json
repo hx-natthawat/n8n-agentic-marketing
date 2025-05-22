@@ -1,0 +1,608 @@
+{
+  "name": "Agentic Marketing - PR and Social Content",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "fca0fa6d-bf4a-472b-b41a-f02e23dd9731",
+      "name": "When Executed by Another Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "content_ideas",
+              "value": "={{$json.content_ideas}}"
+            },
+            {
+              "name": "campaign_objectives",
+              "value": "={{$json.campaign_objectives}}"
+            },
+            {
+              "name": "creative_concepts",
+              "value": "={{$json.creative_concepts}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ae4a6671-f77a-4e40-80f4-89094b42c657",
+      "name": "Data Storage: Content Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        560,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "id": "df917cae-3113-4042-9dac-1a6cf4a6355f",
+      "name": "Language Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        280
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "2cAtVcN7wisKXhHj",
+          "name": "OpenAi Token"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        200
+      ],
+      "id": "c5f40c88-10f1-440d-861d-bbfb46a192b1",
+      "name": "When clicking ‘Test workflow’",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"query\": \"{\\\"campaign_objectives\\\":{\\\"target_audience\\\":\\\"Women aged 25-40 who purchase premium cosmetics, value long-lasting and moisturizing products, and prefer natural, vegan, and cruelty-free options.\\\",\\\"key_messaging\\\":\\\"Dream JELLY TINT offers a luxuriously light feel with long-lasting color and moisturizing benefits, available in 15 natural and vibrant shades. Perfectly crafted for those who seek both elegance and ethical standards in their beauty products.\\\",\\\"primary_goals\\\":[\\\"Achieve 5,000 unit sales within 8 weeks of launch\\\",\\\"Generate 300,000 campaign impressions within the first month\\\",\\\"Secure 15 influencer partnerships for product promotion within the first 4 weeks\\\"],\\\"secondary_goals\\\":[\\\"Build a social media following of at least 10,000 across all platforms\\\",\\\"Obtain at least 1,000 customer reviews with a focus on video testimonials\\\",\\\"Drive 50,000 visitors to the official product page by campaign end\\\"],\\\"success_metrics\\\":[\\\"Sales conversion rate (target: 2%)\\\",\\\"Social media engagement rate (target: 5%)\\\",\\\"Customer review positive sentiment score (target: 80+%)\\\"],\\\"timeline\\\":\\\"8-week campaign: Weeks 1-2: Pre-launch teaser content and influencer outreach; Weeks 3-4: Official product launch and digital ad push; Weeks 5-6: Continue digital advertising with a focus on user-generated content promotion; Weeks 7-8: Retention marketing and engagement focus through special promotions and content series.\\\",\\\"budget_considerations\\\":\\\"Total budget: 200,000 THB. Digital advertising: 50% (100,000 THB); Influencer partnerships: 30% (60,000 THB); Content creation: 10% (20,000 THB); Retention marketing: 10% (20,000 THB)\\\",\\\"channels\\\":[\\\"Instagram and TikTok advertising\\\",\\\"Facebook Page promotional campaigns\\\",\\\"Influencer partnerships on social media\\\"]},\\\"content_ideas\\\":[{\\\"platform\\\":\\\"Instagram\\\",\\\"copy_suggestions\\\":\\\"Discover the elegance of Dream JELLY TINT – luxury you can feel good about. Vegan, cruelty-free, and oh-so-chic. 🌿💄\\\",\\\"content_calendar\\\":\\\"Posts on Tuesdays and Fridays at 7 PM, focusing on serene, elegant visuals.\\\",\\\"example_content\\\":\\\"A serene image of Dream JELLY TINT with a model applying it amidst lush greenery, under pastel skies.\\\",\\\"hashtags\\\":[\\\"#EleganceMeetsEthics\\\",\\\"#LuxuryBeauty\\\",\\\"#VeganCosmetics\\\"],\\\"guideline_contents\\\":\\\"Ensure all images are high-resolution with a focus on natural elements. Captions should be concise and under 150 characters.\\\"},{\\\"platform\\\":\\\"TikTok\\\",\\\"copy_suggestions\\\":\\\"Join the #ShadeChallenge and find your perfect Dream JELLY TINT match! Show us your story and shine bright! ✨\\\",\\\"content_calendar\\\":\\\"Daily posts during launch week, then twice weekly. Focus on interactive and engaging content.\\\",\\\"example_content\\\":\\\"A dynamic video showcasing multiple Dream JELLY TINT shades with diverse models, inviting users to participate in a TikTok challenge.\\\",\\\"hashtags\\\":[\\\"#EveryShadeEveryStory\\\",\\\"#DreamJellyTint\\\",\\\"#BeautyChallenge\\\"],\\\"guideline_contents\\\":\\\"Use vibrant and playful colors in videos. Encourage user interaction and participation in challenges.\\\"},{\\\"platform\\\":\\\"Facebook\\\",\\\"copy_suggestions\\\":\\\"The countdown begins! Unveil the mystery of Dream JELLY TINT with us. Stay tuned for the reveal! ⏳💎\\\",\\\"content_calendar\\\":\\\"Teaser posts every Wednesday and Saturday, leading up to the launch event.\\\",\\\"example_content\\\":\\\"A mysterious image of Dream JELLY TINT emerging from deep shadows with a countdown overlay.\\\",\\\"hashtags\\\":[\\\"#UnveilTheDream\\\",\\\"#CountdownToLuxury\\\",\\\"#ExclusiveReveal\\\"],\\\"guideline_contents\\\":\\\"Use dramatic lighting and high contrast in images. Focus on building anticipation and excitement with each post.\\\"}]}\",\n  \"input\": \"{\\\"campaign_objectives\\\":{\\\"target_audience\\\":\\\"Women aged 25-40 who purchase premium cosmetics, value long-lasting and moisturizing products, and prefer natural, vegan, and cruelty-free options.\\\",\\\"key_messaging\\\":\\\"Dream JELLY TINT offers a luxuriously light feel with long-lasting color and moisturizing benefits, available in 15 natural and vibrant shades. Perfectly crafted for those who seek both elegance and ethical standards in their beauty products.\\\",\\\"primary_goals\\\":[\\\"Achieve 5,000 unit sales within 8 weeks of launch\\\",\\\"Generate 300,000 campaign impressions within the first month\\\",\\\"Secure 15 influencer partnerships for product promotion within the first 4 weeks\\\"],\\\"secondary_goals\\\":[\\\"Build a social media following of at least 10,000 across all platforms\\\",\\\"Obtain at least 1,000 customer reviews with a focus on video testimonials\\\",\\\"Drive 50,000 visitors to the official product page by campaign end\\\"],\\\"success_metrics\\\":[\\\"Sales conversion rate (target: 2%)\\\",\\\"Social media engagement rate (target: 5%)\\\",\\\"Customer review positive sentiment score (target: 80+%)\\\"],\\\"timeline\\\":\\\"8-week campaign: Weeks 1-2: Pre-launch teaser content and influencer outreach; Weeks 3-4: Official product launch and digital ad push; Weeks 5-6: Continue digital advertising with a focus on user-generated content promotion; Weeks 7-8: Retention marketing and engagement focus through special promotions and content series.\\\",\\\"budget_considerations\\\":\\\"Total budget: 200,000 THB. Digital advertising: 50% (100,000 THB); Influencer partnerships: 30% (60,000 THB); Content creation: 10% (20,000 THB); Retention marketing: 10% (20,000 THB)\\\",\\\"channels\\\":[\\\"Instagram and TikTok advertising\\\",\\\"Facebook Page promotional campaigns\\\",\\\"Influencer partnerships on social media\\\"]},\\\"content_ideas\\\":[{\\\"platform\\\":\\\"Instagram\\\",\\\"copy_suggestions\\\":\\\"Discover the elegance of Dream JELLY TINT – luxury you can feel good about. Vegan, cruelty-free, and oh-so-chic. 🌿💄\\\",\\\"content_calendar\\\":\\\"Posts on Tuesdays and Fridays at 7 PM, focusing on serene, elegant visuals.\\\",\\\"example_content\\\":\\\"A serene image of Dream JELLY TINT with a model applying it amidst lush greenery, under pastel skies.\\\",\\\"hashtags\\\":[\\\"#EleganceMeetsEthics\\\",\\\"#LuxuryBeauty\\\",\\\"#VeganCosmetics\\\"],\\\"guideline_contents\\\":\\\"Ensure all images are high-resolution with a focus on natural elements. Captions should be concise and under 150 characters.\\\"},{\\\"platform\\\":\\\"TikTok\\\",\\\"copy_suggestions\\\":\\\"Join the #ShadeChallenge and find your perfect Dream JELLY TINT match! Show us your story and shine bright! ✨\\\",\\\"content_calendar\\\":\\\"Daily posts during launch week, then twice weekly. Focus on interactive and engaging content.\\\",\\\"example_content\\\":\\\"A dynamic video showcasing multiple Dream JELLY TINT shades with diverse models, inviting users to participate in a TikTok challenge.\\\",\\\"hashtags\\\":[\\\"#EveryShadeEveryStory\\\",\\\"#DreamJellyTint\\\",\\\"#BeautyChallenge\\\"],\\\"guideline_contents\\\":\\\"Use vibrant and playful colors in videos. Encourage user interaction and participation in challenges.\\\"},{\\\"platform\\\":\\\"Facebook\\\",\\\"copy_suggestions\\\":\\\"The countdown begins! Unveil the mystery of Dream JELLY TINT with us. Stay tuned for the reveal! ⏳💎\\\",\\\"content_calendar\\\":\\\"Teaser posts every Wednesday and Saturday, leading up to the launch event.\\\",\\\"example_content\\\":\\\"A mysterious image of Dream JELLY TINT emerging from deep shadows with a countdown overlay.\\\",\\\"hashtags\\\":[\\\"#UnveilTheDream\\\",\\\"#CountdownToLuxury\\\",\\\"#ExclusiveReveal\\\"],\\\"guideline_contents\\\":\\\"Use dramatic lighting and high contrast in images. Focus on building anticipation and excitement with each post.\\\"}]}\",\n  \"raw_query\": \"ต้องการแคมเปญการตลาดสำหรับลิปสติกไลน์ใหม่: • ชื่อ ผลิตภัณ: Dream JELLY TINT •ตลาดระดับพรีเมียม, ราคาชิ้นละ 1000 บาท • คุณสมบัติหลัก: สูตรติดทนนานแต่ให้ความชุ่มชื้น,เนื้อบางเบา • ส่วนผสม: ผลิตจากธรรมชาติ, วีแกน, ไม่ทดลองกับสัตว์ • มีให้เลือก 15 สี • กลุ่มเป้าหมาย: ผู้หญิงอายุ 25-40 ปีที่ซื้อเครื่องสำอางพรีเมียม • งบประมาณทำการตลาด: 200,000 บาท • ระยะเวลา: เปิดตัวใน 8 สัปดาห์ • Channel: TIKTOK, IG, FACEBOOK PAGE • ต้องการแผนแคมเปญแบบเต็มรูปแบบ\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        240,
+        200
+      ],
+      "id": "d71e5757-5505-4020-b438-f1e2cd177fa9",
+      "name": "Edit Fields",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "id": "9cd1334e-100d-4f67-b02c-46751978c655",
+      "name": "Language Model1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        300
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "2cAtVcN7wisKXhHj",
+          "name": "OpenAi Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Raw query: {{ $('When Executed by Another Workflow').item.json.raw_query }}\n-----------------------\nResponse from Social Media Manager Agent\n{{ $json.output }}",
+        "options": {
+          "systemMessage": "=# JSON to Document Converter Agent for Social Media Content\n\nYou are the JSON to Document Converter Agent for a product marketing campaign used by the Social Media Manager Agent. Your role is to transform structured JSON content into comprehensive documents that Content Creators can utilize effectively. When presented with JSON data, extract and organize the information into a clear and actionable document format.\n\n### INPUT\nYou will receive a JSON object with the following structure from the Social Media Manager Agent:\n```json\n{\n  \"social_media_strategy\": {\n    \"platform\": \"string value\",\n    \"content\": \"string value\",\n    \"schedule\": \"string value\",\n    \"brand_guidelines\": \"string value\"\n  }\n}\n```\n\n### PROCESS\nWhen presented with the social media strategy JSON data, follow these steps:\n1. Detect the language from the raw query and set it as the output language\n2. Extract each content idea from the JSON and convert it into a detailed section in the document\n3. Format the data into a clear, concise, and actionable document\n4. Ensure that each section is well-structured and includes all necessary details for content creation\n5. **Translate all content into the detected language**, ensuring translations maintain the original meaning and tone\n\n### OUTPUT\nYour response must be a well-formatted document with the following sections for each platform, translated into the detected language:\n\n#### Platform (แพลตฟอร์ม)\nSpecify the platform for which the content is intended.\nExample: \"Instagram\"\n\n#### Content (เนื้อหา)\nProvide the refined content to be posted.\nExample: \"Introducing our new lipstick collection that lets your lips do the talking. #ColorThatSpeaks\"\n\n#### Schedule (กำหนดการโพสต์)\nOutline the posting schedule.\nExample: \"12:00 PM, Tuesday (highest engagement)\"\n\n#### Brand Guidelines (แนวทางแบรนด์)\nOffer guidelines to ensure content aligns with brand identity.\nExample: \"Use brand colors and fonts consistently. Ensure messaging is empowering and inclusive.\"\n\n### FORMATTING GUIDELINES\n- Use clear, professional language\n- Include appropriate section headers\n- Use bullet points for lists where appropriate\n- Include placeholders for graphics or images where appropriate [IMAGE: description]\n- Format dates and times consistently\n- Maintain consistent spacing and formatting throughout\n- **Translate all content fields into the detected language**, ensuring translations maintain the original meaning and tone\n\n### TRANSLATION GUIDELINES\n- Detect the language from the raw query and set it as the output language\n- If the raw query is in Thai, translate all content into Thai\n- If the raw query is in English, keep content in English\n- For other languages, translate accordingly\n- Maintain the original intent and tone of the content while translating\n- Keep technical terms, brand names, and proper nouns in their original form\n- Ensure that translated content is culturally appropriate and natural-sounding\n- For hashtags, provide both original and translated versions when appropriate\n\nThis structured approach ensures that Content Creators have all the necessary information to produce high-quality, on-brand content for the marketing campaign."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        1660,
+        40
+      ],
+      "id": "e5fb2269-a9d4-445e-bd27-15a8331d6a92",
+      "name": "JSON to Document Converter Agent"
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "content_ideas",
+              "value": "={{$('Social Media Manager Agent').item.json.output.parseJson()}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d52c55dc-c90e-4708-b0ca-f111f986edff",
+      "name": "Workflow Output1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        4000,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$node[\"Data Storage: Content Input\"].json}}",
+        "options": {
+          "systemMessage": "=You are the Social Media Manager for a product marketing campaign. Your role is to execute the social media strategy using the content plan provided.\n\nWhen presented with content ideas, follow these steps:\n1. Review and refine content for each social media platform.\n2. Schedule posts according to the content calendar.\n3. Ensure all content adheres to brand guidelines and campaign objectives.\n\n### CRITICAL INSTRUCTION: YOUR ENTIRE RESPONSE MUST BE VALID JSON ONLY\nDo not include any explanatory text, markdown formatting, or natural language outside the JSON structure.\nDo not prefix your response with ```json or any other markers.\nDo not include any text after the JSON.\n\nYour response must be a single JSON array where each object has this exact structure:\n{\n  \"social_media_strategy\": {\n    \"platform\": \"string value\",\n    \"content\": \"string value\",\n    \"schedule\": \"string value\",\n    \"brand_guidelines\": \"string value\"\n  }\n}\n\nField requirements:\n- social_media_strategy: (object) Contains the strategy details for each platform.\n\n- platform: (string) The social media platform this strategy is for.\n  Example: \"Instagram\"\n\n- content: (string) The refined content to be posted.\n  Example: \"Introducing our new lipstick collection that lets your lips do the talking. #ColorThatSpeaks\"\n\n- schedule: (string) The posting schedule.\n  Example: \"12:00 PM, Tuesday (highest engagement)\"\n\n- brand_guidelines: (string) Guidelines to ensure content aligns with brand identity.\n  Example: \"Use brand colors and fonts consistently. Ensure messaging is empowering and inclusive.\"\n\nThis structured approach ensures that social media content is engaging, on-brand, and strategically aligned with campaign goals."
+        }
+      },
+      "id": "fb91bedc-31d8-4d39-b82c-ed12cf83b770",
+      "name": "Social Media Manager Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        1280,
+        40
+      ],
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "id": "de315688-3ee8-45c9-a1f7-1dfb16c51d33",
+      "name": "Language Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        2660,
+        340
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "2cAtVcN7wisKXhHj",
+          "name": "OpenAi Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{$node[\"Data Storage: Content Input\"].json}}",
+        "options": {
+          "systemMessage": "=You are the PR Specialist Agent for a product marketing campaign. Your role is to coordinate launch events and manage media relations to enhance the brand's visibility and reputation.\n\n### INPUTS\nYou will receive the following inputs:\n1. campaign_objectives: Target audience, key messaging, goals, timeline, and budget from the Marketing Manager\n2. creative_concepts: Campaign concept details from the Creative Director\n3. content_ideas: Social media content suggestions from the Content Creator\n4. media_contacts (media_contacts_tool): List of relevant media professionals with contact details\n\n### PROCESS\nWhen presented with these inputs, follow these steps:\n1. Analyze the campaign objectives and creative concepts to understand the campaign strategy\n2. Review the media contacts to identify the most relevant for this product\n3. Develop a comprehensive PR plan including press releases, media outreach, and event coordination\n4. Ensure all communications align with the brand's voice and campaign objectives\n5. Consider the content_ideas to maintain consistency across PR and social media messaging\n\n### CRITICAL INSTRUCTION: YOUR ENTIRE RESPONSE MUST BE VALID JSON ONLY\nDo not include any explanatory text, markdown formatting, or natural language outside the JSON structure.\nDo not prefix your response with ```json or any other markers.\nDo not include any text after the JSON.\n\nYour response must be a single JSON object with this exact structure:\n{\n  \"pr_strategy\": {\n    \"headline\": \"string value\",\n    \"subheadline\": \"string value\",\n    \"media_outreach\": {\n      \"primary_contacts\": [\n        {\n          \"name\": \"string value\",\n          \"organization\": \"string value\",\n          \"outreach_approach\": \"string value\"\n        }\n      ],\n      \"secondary_contacts\": [\n        {\n          \"name\": \"string value\",\n          \"organization\": \"string value\",\n          \"outreach_approach\": \"string value\"\n        }\n      ]\n    },\n    \"event_coordination\": {\n      \"event_name\": \"string value\",\n      \"date\": \"string value\",\n      \"location\": \"string value\",\n      \"key_activities\": [\n        \"string value\"\n      ]\n    },\n    \"press_release_draft\": {\n      \"title\": \"string value\",\n      \"subtitle\": \"string value\",\n      \"introduction\": \"string value\",\n      \"body_paragraphs\": [\n        \"string value\"\n      ],\n      \"quote\": \"string value\",\n      \"closing\": \"string value\",\n      \"contact_information\": \"string value\"\n    },\n    \"timeline\": {\n      \"pre_launch_activities\": [\n        {\n          \"activity\": \"string value\",\n          \"date\": \"string value\"\n        }\n      ],\n      \"launch_day_activities\": [\n        {\n          \"activity\": \"string value\",\n          \"time\": \"string value\"\n        }\n      ],\n      \"post_launch_activities\": [\n        {\n          \"activity\": \"string value\",\n          \"date\": \"string value\"\n        }\n      ]\n    },\n    \"budget_allocation\": {\n      \"media_events\": \"string value\",\n      \"press_kits\": \"string value\",\n      \"influencer_partnerships\": \"string value\",\n      \"venue_and_logistics\": \"string value\"\n    }\n  }\n}\n\nField requirements:\n- pr_strategy: (object) Contains the PR strategy details.\n\n- headline: (string) The main headline for the press release.\n  Example: \"Brand X Launches 'Color That Speaks' Lipstick Collection\"\n\n- subheadline: (string) The supporting subheadline.\n  Example: \"A new line of sustainable, long-lasting lipsticks\"\n\n- media_outreach: (object) Details of media engagement strategy.\n  - primary_contacts: (array) List of priority media contacts to engage.\n    - name: (string) Name of the media contact from the provided list.\n    - organization: (string) Organization or platform of the contact.\n    - outreach_approach: (string) Specific approach for this contact.\n  - secondary_contacts: (array) List of secondary media contacts.\n\n- event_coordination: (object) Plans for event management.\n  - event_name: (string) Name of the launch event.\n  - date: (string) Planned date for the event.\n  - location: (string) Venue for the event.\n  - key_activities: (array) List of main activities planned for the event.\n\n- press_release_draft: (object) Draft content for the press release.\n  - title: (string) Main title of the press release.\n  - subtitle: (string) Supporting subtitle.\n  - introduction: (string) Opening paragraph introducing the news.\n  - body_paragraphs: (array) Main content paragraphs.\n  - quote: (string) Quote from company representative.\n  - closing: (string) Closing paragraph.\n  - contact_information: (string) PR contact details.\n\n- timeline: (object) Detailed timeline for PR activities.\n  - pre_launch_activities: (array) Activities before launch.\n  - launch_day_activities: (array) Activities on launch day.\n  - post_launch_activities: (array) Activities after launch.\n\n- budget_allocation: (object) How the PR budget will be distributed.\n  - media_events: (string) Budget for media events.\n  - press_kits: (string) Budget for press kits.\n  - influencer_partnerships: (string) Budget for influencer collaborations.\n  - venue_and_logistics: (string) Budget for venue and logistics.\n\nThis structured approach ensures that public relations activities are effectively managed and aligned with the overall campaign strategy."
+        }
+      },
+      "id": "f55ea48e-d9ae-4a88-9634-d0f65f3df1da",
+      "name": "PR Specialist Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        2680,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "name": "media_contacts_tool",
+        "jsCode": "const mediaContacts = [\n    {\n      \"name\": \"คุณพิมพ์มาดา วงศ์สุรไกร\",\n      \"title\": \"บรรณาธิการความงาม\",\n      \"organization\": \"นิตยสาร ELLE Thailand\",\n      \"email\": \"pimmada@ellethailand.com\",\n      \"phone\": \"+66-81-234-5678\",\n      \"notes\": \"สนใจผลิตภัณฑ์ความงามที่เป็นมิตรกับสิ่งแวดล้อม\"\n    },\n    {\n      \"name\": \"คุณณัฐพล สุขสวัสดิ์\",\n      \"title\": \"อินฟลูเอนเซอร์ด้านความงาม\",\n      \"platform\": \"Instagram\",\n      \"handle\": \"@nattapon_beauty\",\n      \"email\": \"nattapon.beauty@gmail.com\",\n      \"followers\": 320000,\n      \"notes\": \"เน้นนำเสนอผลิตภัณฑ์วีแกนและไม่ทดลองกับสัตว์\"\n    },\n    {\n      \"name\": \"คุณสุนิสา ธรรมวิชิต\",\n      \"title\": \"บล็อกเกอร์ความงาม\",\n      \"website\": \"www.sunisabeauty.com\",\n      \"email\": \"sunisa@sunisabeauty.com\",\n      \"phone\": \"+66-89-876-5432\",\n      \"notes\": \"รีวิวผลิตภัณฑ์ใหม่และเทรนด์ความงาม\"\n    },\n    {\n      \"name\": \"คุณธนวัฒน์ ศรีสุวรรณ\",\n      \"title\": \"ผู้ดำเนินรายการ\",\n      \"organization\": \"รายการ Beauty Update, ช่อง 7\",\n      \"email\": \"thanawat@ch7.com\",\n      \"phone\": \"+66-86-543-2109\",\n      \"notes\": \"สนใจนวัตกรรมใหม่ในวงการความงาม\"\n    },\n    {\n      \"name\": \"คุณปิยะดา รัตนเสถียร\",\n      \"title\": \"บรรณาธิการบิวตี้\",\n      \"organization\": \"นิตยสาร Cosmopolitan Thailand\",\n      \"email\": \"piyada@cosmothailand.com\",\n      \"phone\": \"+66-84-321-0987\",\n      \"notes\": \"ชอบนำเสนอเรื่องราวเบื้องหลังแบรนด์และผลิตภัณฑ์\"\n    },\n    {\n      \"name\": \"คุณวรรณวิสา จิรานุวัฒน์\",\n      \"title\": \"บิวตี้บล็อกเกอร์\",\n      \"platform\": \"YouTube\",\n      \"handle\": \"@WanwisaBeauty\",\n      \"email\": \"wanwisa@beautyreviews.co.th\",\n      \"followers\": 450000,\n      \"notes\": \"เชี่ยวชาญด้านการรีวิวลิปสติกและผลิตภัณฑ์สำหรับริมฝีปาก\"\n    },\n    {\n      \"name\": \"คุณกัลยา สุทธิพงษ์\",\n      \"title\": \"บรรณาธิการบิวตี้\",\n      \"organization\": \"นิตยสาร Vogue Thailand\",\n      \"email\": \"kallaya@voguethailand.com\",\n      \"phone\": \"+66-82-765-4321\",\n      \"notes\": \"สนใจผลิตภัณฑ์ความงามระดับพรีเมียม\"\n    },\n    {\n      \"name\": \"คุณพัชรพร วงศ์วิวัฒน์\",\n      \"title\": \"อินฟลูเอนเซอร์ความงาม\",\n      \"platform\": \"TikTok\",\n      \"handle\": \"@patcharaporn_beauty\",\n      \"email\": \"patcharaporn@influencers.co.th\",\n      \"followers\": 280000,\n      \"notes\": \"เน้นคอนเทนต์สั้นๆ ที่สนุกและให้ความรู้เกี่ยวกับเครื่องสำอาง\"\n    },\n    {\n      \"name\": \"คุณอรุณี สว่างศรี\",\n      \"title\": \"ผู้เชี่ยวชาญด้านความงาม\",\n      \"organization\": \"สถาบันความงาม Beauty Expert\",\n      \"email\": \"arunee@beautyexpert.co.th\",\n      \"phone\": \"+66-89-123-4567\",\n      \"notes\": \"ให้คำแนะนำด้านผลิตภัณฑ์ความงามและการดูแลผิว\"\n    },\n    {\n      \"name\": \"คุณนภัสสร ธนบดีพิพัฒน์\",\n      \"title\": \"บรรณาธิการบิวตี้\",\n      \"organization\": \"นิตยสาร Harper's Bazaar Thailand\",\n      \"email\": \"napassorn@harpersbazaar.co.th\",\n      \"phone\": \"+66-81-987-6543\",\n      \"notes\": \"สนใจผลิตภัณฑ์ความงามที่มีนวัตกรรมและเรื่องราวที่น่าสนใจ\"\n    },\n    {\n      \"name\": \"คุณชนิกานต์ เจริญวงศ์\",\n      \"title\": \"บล็อกเกอร์ความงาม\",\n      \"website\": \"www.beautytips.co.th\",\n      \"email\": \"chanikan@beautytips.co.th\",\n      \"phone\": \"+66-85-432-1098\",\n      \"notes\": \"เน้นการรีวิวผลิตภัณฑ์อย่างละเอียดและตรงไปตรงมา\"\n    },\n    {\n      \"name\": \"คุณธัญญา วิริยะกิจ\",\n      \"title\": \"อินฟลูเอนเซอร์ความงาม\",\n      \"platform\": \"Instagram\",\n      \"handle\": \"@thanya_beauty\",\n      \"email\": \"thanya@beautyinfluencers.com\",\n      \"followers\": 180000,\n      \"notes\": \"เน้นความงามแบบธรรมชาติและผลิตภัณฑ์ที่เป็นมิตรกับสิ่งแวดล้อม\"\n    },\n    {\n      \"name\": \"คุณสุพิชญา นวลละออง\",\n      \"title\": \"ผู้ดำเนินรายการ\",\n      \"organization\": \"รายการ Beauty Talk, ช่อง 3\",\n      \"email\": \"supichaya@ch3.co.th\",\n      \"phone\": \"+66-83-210-9876\",\n      \"notes\": \"สนใจเทรนด์ความงามล่าสุดและผลิตภัณฑ์นวัตกรรมใหม่\"\n    },\n    {\n      \"name\": \"คุณวิภาวี สุนทรวัฒน์\",\n      \"title\": \"บรรณาธิการบิวตี้\",\n      \"organization\": \"นิตยสาร Marie Claire Thailand\",\n      \"email\": \"wipawee@marieclaire.co.th\",\n      \"phone\": \"+66-81-098-7654\",\n      \"notes\": \"สนใจผลิตภัณฑ์ความงามที่มีเรื่องราวและแรงบันดาลใจ\"\n    },\n    {\n      \"name\": \"คุณนันทวรรณ พิทักษ์ธรรม\",\n      \"title\": \"บล็อกเกอร์ความงาม\",\n      \"platform\": \"YouTube\",\n      \"handle\": \"@NantawanBeauty\",\n      \"email\": \"nantawan@beautyreview.co.th\",\n      \"followers\": 220000,\n      \"notes\": \"เชี่ยวชาญในการรีวิวผลิตภัณฑ์เครื่องสำอางระดับพรีเมียม\"\n    },\n    {\n      \"name\": \"คุณพิมพ์ชนก วงศ์สุวรรณ\",\n      \"title\": \"อินฟลูเอนเซอร์ความงาม\",\n      \"platform\": \"TikTok\",\n      \"handle\": \"@pimchanok_beauty\",\n      \"email\": \"pimchanok@influencerth.com\",\n      \"followers\": 300000,\n      \"notes\": \"เน้นการสาธิตการใช้ผลิตภัณฑ์ความงามในรูปแบบที่สนุกและเข้าใจง่าย\"\n    },\n    {\n      \"name\": \"คุณกรกนก สุวรรณรัตน์\",\n      \"title\": \"บรรณาธิการบิวตี้\",\n      \"organization\": \"นิตยสาร Cleo Thailand\",\n      \"email\": \"kornkanok@cleothailand.com\",\n      \"phone\": \"+66-86-789-0123\",\n      \"notes\": \"สนใจผลิตภัณฑ์ความงามสำหรับคนรุ่นใหม่\"\n    },\n    {\n      \"name\": \"คุณปาริชาติ วิจิตรวงศ์\",\n      \"title\": \"ผู้เชี่ยวชาญด้านความงาม\",\n      \"organization\": \"สถาบันความงาม Beauty Institute\",\n      \"email\": \"parichat@beautyinstitute.co.th\",\n      \"phone\": \"+66-84-567-8901\",\n      \"notes\": \"ให้คำแนะนำด้านการดูแลผิวและการใช้ผลิตภัณฑ์ความงามอย่างถูกวิธี\"\n    },\n    {\n      \"name\": \"คุณธนภรณ์ สิทธิพันธุ์\",\n      \"title\": \"บล็อกเกอร์ความงาม\",\n      \"website\": \"www.beautyaddicts.co.th\",\n      \"email\": \"thanaporn@beautyaddicts.co.th\",\n      \"phone\": \"+66-89-012-3456\",\n      \"notes\": \"เน้นการรีวิวผลิตภัณฑ์ความงามระดับพรีเมียมและลักชัวรี่\"\n    },\n    {\n      \"name\": \"คุณพิมพ์ลภัส จิรวัฒนกุล\",\n      \"title\": \"อินฟลูเอนเซอร์ความงาม\",\n      \"platform\": \"Instagram\",\n      \"handle\": \"@pimlapat_beauty\",\n      \"email\": \"pimlapat@beautyinfluencer.co.th\",\n      \"followers\": 270000,\n      \"notes\": \"นำเสนอไลฟ์สไตล์ความงามและแฟชั่นสำหรับผู้หญิงยุคใหม่\"\n    }\n  ]\n\nreturn JSON.stringify(mediaContacts)"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolCode",
+      "typeVersion": 1.1,
+      "position": [
+        2880,
+        320
+      ],
+      "id": "d3a6bc3d-0ca4-4cb4-8559-8e7276cfcb5b",
+      "name": "Media Contact tool"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "id": "ec40b877-161a-4bb8-9c53-30667f4123e5",
+      "name": "Language Model3",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        3100,
+        300
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "2cAtVcN7wisKXhHj",
+          "name": "OpenAi Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Raw query: {{ $('When Executed by Another Workflow').item.json.raw_query }}\n-----------------------\nResponse from Social Media Manager Agent\n{{ $json.output }}",
+        "options": {
+          "systemMessage": "=# JSON to Document Converter Agent for PR Strategy\n\nYou are the JSON to Document Converter Agent specialized in transforming PR strategy JSON data into professional, well-formatted documents. Your role is to convert structured PR data into compelling press releases, media kits, and event briefs.\n\n### INPUT\nYou will receive a JSON object with the following structure from the PR Specialist Agent:\n```json\n{\n  \"pr_strategy\": {\n    \"headline\": \"string value\",\n    \"subheadline\": \"string value\",\n    \"media_outreach\": {\n      \"primary_contacts\": [\n        {\n          \"name\": \"string value\",\n          \"organization\": \"string value\",\n          \"outreach_approach\": \"string value\"\n        }\n      ],\n      \"secondary_contacts\": [\n        {\n          \"name\": \"string value\",\n          \"organization\": \"string value\",\n          \"outreach_approach\": \"string value\"\n        }\n      ]\n    },\n    \"event_coordination\": {\n      \"event_name\": \"string value\",\n      \"date\": \"string value\",\n      \"location\": \"string value\",\n      \"key_activities\": [\n        \"string value\"\n      ]\n    },\n    \"press_release_draft\": {\n      \"title\": \"string value\",\n      \"subtitle\": \"string value\",\n      \"introduction\": \"string value\",\n      \"body_paragraphs\": [\n        \"string value\"\n      ],\n      \"quote\": \"string value\",\n      \"closing\": \"string value\",\n      \"contact_information\": \"string value\"\n    },\n    \"timeline\": {\n      \"pre_launch_activities\": [\n        {\n          \"activity\": \"string value\",\n          \"date\": \"string value\"\n        }\n      ],\n      \"launch_day_activities\": [\n        {\n          \"activity\": \"string value\",\n          \"time\": \"string value\"\n        }\n      ],\n      \"post_launch_activities\": [\n        {\n          \"activity\": \"string value\",\n          \"date\": \"string value\"\n        }\n      ]\n    },\n    \"budget_allocation\": {\n      \"media_events\": \"string value\",\n      \"press_kits\": \"string value\",\n      \"influencer_partnerships\": \"string value\",\n      \"venue_and_logistics\": \"string value\"\n    }\n  }\n}\n```\n\n### PROCESS\nWhen presented with the PR strategy JSON data, follow these steps:\n1. Detect the language from the raw query and set it as the output language\n2. Extract all relevant information from the JSON structure\n3. Format the data into professional, well-structured documents\n4. Create three distinct document types: Press Release, Media Brief, and Event Plan\n5. Ensure all documents maintain a consistent brand voice and professional tone\n6. Format the documents with appropriate headers, sections, and formatting\n7. **Translate all content into the detected language**, ensuring translations maintain the original meaning and tone\n\n### OUTPUT\nYour response must include three separate documents, translated into the detected language:\n\n#### 1. Press Release (ข่าวประชาสัมพันธ์)\nCreate a complete press release based on the press_release_draft data, formatted according to industry standards with:\n- Company logo placeholder [LOGO]\n- \"FOR IMMEDIATE RELEASE\" header\n- Release date\n- Contact information\n- Headline and subheadline\n- Body paragraphs\n- Quote\n- About the company section\n- ### symbol to indicate end of release\n\n#### 2. Media Brief (บทสรุปสำหรับสื่อ)\nCreate a media brief document that includes:\n- Overview of the PR strategy\n- Key messaging points\n- Primary and secondary media contacts with outreach approaches\n- Timeline for media activities\n- Media assets available\n\n#### 3. Event Plan (แผนการจัดงาน)\nCreate a detailed event plan that includes:\n- Event name, date, location\n- Schedule of activities\n- Logistics requirements\n- Budget breakdown\n- Staffing needs\n- Success metrics\n\n### FORMATTING GUIDELINES\n- Use clear, professional language\n- Include appropriate section headers\n- Use bullet points for lists\n- Include placeholders for graphics or images where appropriate [IMAGE: description]\n- Format dates consistently\n- Maintain consistent spacing and formatting throughout\n- **Translate all content fields into the detected language**, ensuring translations maintain the original meaning and tone\n\n### TRANSLATION GUIDELINES\n- Detect the language from the raw query and set it as the output language\n- If the raw query is in Thai, translate all content into Thai\n- If the raw query is in English, keep content in English\n- For other languages, translate accordingly\n- Maintain the original intent and tone of the content while translating\n- Keep technical terms, brand names, and proper nouns in their original form\n- Ensure that translated content is culturally appropriate and natural-sounding\n\nYour goal is to transform the structured JSON data into professional documents that could be immediately used by a PR team to execute the campaign strategy.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        3100,
+        40
+      ],
+      "id": "49a05ee7-3172-4d8f-8cf5-5a905862fff0",
+      "name": "JSON to Document Converter Agent1"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "output",
+        "options": {
+          "fileName": "=PR Documents_{{$now.format('yyyy-MM-dd')}}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        3500,
+        40
+      ],
+      "id": "267dfa2c-2e2a-462f-9d67-3f60dfaab187",
+      "name": "Convert to PR Documents"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "output",
+        "options": {
+          "fileName": "=Social Media Document_{{$now.format('yyyy-MM-dd')}}"
+        }
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2060,
+        40
+      ],
+      "id": "4f2fefc0-827e-4d8e-a86c-75137f7822dc",
+      "name": "Convert to Social Media Documents"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "=[Marketing Documents] {{ $('When Executed by Another Workflow').item.json.campaign_objectives.product_name }}",
+        "limit": 1,
+        "filter": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        900,
+        40
+      ],
+      "id": "39c2f0a1-124a-4c31-b377-7d40e35b1875",
+      "name": "Search Folder",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "6WyTXq7YUX3HcPuZ",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "=Social Media Document_{{$now.format('yyyy-MM-dd')}}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Search Folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2360,
+        40
+      ],
+      "id": "15fa7940-a15c-4422-95a1-72feecc27266",
+      "name": "Google Drive1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "6WyTXq7YUX3HcPuZ",
+          "name": "Google Drive account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "name": "=PR Document_{{$now.format('yyyy-MM-dd')}}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Search Folder').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3700,
+        40
+      ],
+      "id": "c6d95712-7073-42ac-85de-4d8c37bf6d9c",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "6WyTXq7YUX3HcPuZ",
+          "name": "Google Drive account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "query": "{\"campaign_objectives\":{\"target_audience\":\"Young professional and fashionable women aged 25-40 with a preference for premium and ethical beauty products, located in urban areas and interested in sustainability and luxury.\",\"key_messaging\":\"Dream JELLY TINT offers a luxurious, long-lasting wear that hydrates with every application. Made with natural, vegan ingredients, it's the perfect choice for stylish, eco-conscious women who refuse to compromise on quality.\",\"primary_goals\":[\"Achieve 5,000 units sold within the first 8 weeks after launch\",\"Reach 300,000 video views on TikTok within the first month\",\"Increase brand awareness by achieving 100,000 impressions on Instagram and Facebook within 2 months\"],\"secondary_goals\":[\"Grow email subscriber list by 5,000 new contacts by the end of the campaign\",\"Generate 1,000 social media shares across all channels during the campaign period\"],\"success_metrics\":[\"Sales conversion rate from social media (target: 3%)\",\"Cost per acquisition (target: under $20)\",\"Engagement rate on social media platforms (target: 5%)\",\"Brand sentiment analysis score (target: positive feedback over 80%)\"],\"timeline\":\"8-week campaign: Weeks 1-2: Pre-launch teasers and influencer collaborations; Weeks 3-4: Official launch with digital ads; Weeks 5-6: User-generated content focus; Weeks 7-8: Retention strategies and enhancement of engagements.\",\"budget_considerations\":\"Total budget: 200,000 THB. Digital advertising: 50% (100,000 THB); Influencer partnerships: 25% (50,000 THB); Content creation and production: 15% (30,000 THB); PR activities and events: 10% (20,000 THB)\",\"channels\":[\"TikTok advertising and influencer partnerships\",\"Instagram visual ads and stories\",\"Facebook Page community building and engagement\"]},\"creative_concepts\":[{\"concept_title\":\"Eco-Luxe Dreams\",\"concept_description\":\"This concept focuses on the luxurious feeling of using Dream JELLY TINT, highlighting its premium quality and eco-friendly credentials. The campaign features serene and elegant imagery that portrays the product as a dream-like experience for the skin, appealing to the aspirational lifestyle of the target audience.\",\"key_visuals\":\"Soft focus photography with pastel color palettes, emphasizing the natural ingredients and luxurious textures. Imagery includes close-ups of models applying the product with a dreamy, ethereal feel. The use of flowing fabrics and natural elements like flowers and water to enhance the theme of luxury and nature.\",\"key_messaging\":\"Tagline: 'Indulge in Eco-Luxe.' Messaging focuses on the dual benefit of luxury and sustainability, appealing to the eco-conscious lifestyle without compromising on quality.\",\"channels\":[\"Instagram visual ads and stories\",\"TikTok influencer partnerships\",\"Facebook Page community building and engagement\"]},{\"concept_title\":\"Sustainable Glamour\",\"concept_description\":\"This concept showcases the glamour of eco-friendly makeup, combining high fashion with sustainability. The campaign features bold and striking visuals that emphasize the product's vibrant colors and long-lasting wear, targeting trendy urban professionals who want to make a statement with their makeup choices.\",\"key_visuals\":\"Vibrant, high-contrast imagery with bold color pops against minimalist settings. Models styled in fashionable, high-end clothing applying the product in urban environments. Use of gold and emerald green accents to convey luxury and sustainability.\",\"key_messaging\":\"Tagline: 'Glamour with a Conscience.' Copy emphasizes the stylish, fashion-forward aspect of the product while highlighting its ethical manufacturing and natural ingredients.\",\"channels\":[\"TikTok advertising and influencer partnerships\",\"Instagram visual ads and stories\",\"Large-format outdoor billboards in urban centers\"]},{\"concept_title\":\"Naturally Chic\",\"concept_description\":\"This concept highlights the natural beauty of Dream JELLY TINT, appealing to women who value simplicity and elegance in their beauty routine. The campaign uses minimalistic and clean visual aesthetics to convey the idea of natural chic, resonating with the audience's desire for authentic, effortless beauty.\",\"key_visuals\":\"Clean, minimalist visuals with a focus on natural lighting and simple compositions. Use of neutral tones with a touch of color to highlight the product. Models with natural makeup looks in cozy, intimate settings, such as home or nature.\",\"key_messaging\":\"Tagline: 'Simply Beautiful, Naturally You.' Messaging focuses on the effortless beauty and hydration offered by the product, ideal for women who embrace their natural selves.\",\"channels\":[\"Instagram visual ads and stories\",\"Facebook Page community building and engagement\",\"Email marketing campaigns\"]}],\"content_ideas\":[{\"platform\":\"Instagram\",\"copy_suggestions\":\"สัมผัสความหรูหราในแบบ Eco-Luxe ด้วย Dream JELLY TINT ที่ให้ความรู้สึกดั่งความฝันบนริมฝีปากของคุณ\",\"content_calendar\":\"โพสต์ทุกวันจันทร์และพฤหัสบดี เวลา 18.00 น.\",\"example_content\":\"ภาพสีสันสดใสของ Dream JELLY TINT เฉดสีใหม่พร้อมข้อความกระตุ้นให้เยี่ยมชมเว็บไซต์ของเรา\",\"hashtags\":[\"#EcoLuxeDreams\",\"#DreamJELLYTINT\",\"#VeganBeauty\"],\"guideline_contents\":\"มั่นใจว่าภาพทั้งหมดมีความละเอียดสูงและคำบรรยายไม่เกิน 150 ตัวอักษร\"},{\"platform\":\"TikTok\",\"copy_suggestions\":\"สนุกไปกับการแต่งแต้มสีสันให้ริมฝีปากด้วย Dream JELLY TINT ที่ทั้งหรูหราและเป็นมิตรกับธรรมชาติ\",\"content_calendar\":\"โพสต์ทุกวันอังคารและศุกร์ เวลา 17.00 น.\",\"example_content\":\"วิดีโอจาก Influencer ที่แสดงการใช้ Dream JELLY TINT ในบรรยากาศที่หรูหราและเป็นธรรมชาติ\",\"hashtags\":[\"#SustainableGlamour\",\"#TikTokBeauty\",\"#EcoFriendly\"],\"guideline_contents\":\"ใช้ภาพเคลื่อนไหวที่ดึงดูดและเสียงเพลงที่มีพลังเพื่อดึงความสนใจ\"},{\"platform\":\"Facebook\",\"copy_suggestions\":\"ร่วมเป็นส่วนหนึ่งของชุมชนที่รักความงามและความเป็นธรรมชาติกับ Dream JELLY TINT\",\"content_calendar\":\"โพสต์ทุกวันพุธและเสาร์ เวลา 19.00 น.\",\"example_content\":\"ภาพแนวนอนที่แสดง Dream JELLY TINT ท่ามกลางการตั้งค่าที่หรูหราเพื่อเน้นการมีส่วนร่วมของชุมชนและการเล่าเรื่องของแบรนด์\",\"hashtags\":[\"#CommunityLove\",\"#EcoLuxe\",\"#PremiumBeauty\"],\"guideline_contents\":\"เน้นการสร้างเรื่องราวและการมีส่วนร่วมของชุมชนผ่านภาพและข้อความที่อบอุ่น\"}]}",
+          "input": "{\"campaign_objectives\":{\"target_audience\":\"Young professional and fashionable women aged 25-40 with a preference for premium and ethical beauty products, located in urban areas and interested in sustainability and luxury.\",\"key_messaging\":\"Dream JELLY TINT offers a luxurious, long-lasting wear that hydrates with every application. Made with natural, vegan ingredients, it's the perfect choice for stylish, eco-conscious women who refuse to compromise on quality.\",\"primary_goals\":[\"Achieve 5,000 units sold within the first 8 weeks after launch\",\"Reach 300,000 video views on TikTok within the first month\",\"Increase brand awareness by achieving 100,000 impressions on Instagram and Facebook within 2 months\"],\"secondary_goals\":[\"Grow email subscriber list by 5,000 new contacts by the end of the campaign\",\"Generate 1,000 social media shares across all channels during the campaign period\"],\"success_metrics\":[\"Sales conversion rate from social media (target: 3%)\",\"Cost per acquisition (target: under $20)\",\"Engagement rate on social media platforms (target: 5%)\",\"Brand sentiment analysis score (target: positive feedback over 80%)\"],\"timeline\":\"8-week campaign: Weeks 1-2: Pre-launch teasers and influencer collaborations; Weeks 3-4: Official launch with digital ads; Weeks 5-6: User-generated content focus; Weeks 7-8: Retention strategies and enhancement of engagements.\",\"budget_considerations\":\"Total budget: 200,000 THB. Digital advertising: 50% (100,000 THB); Influencer partnerships: 25% (50,000 THB); Content creation and production: 15% (30,000 THB); PR activities and events: 10% (20,000 THB)\",\"channels\":[\"TikTok advertising and influencer partnerships\",\"Instagram visual ads and stories\",\"Facebook Page community building and engagement\"]},\"creative_concepts\":[{\"concept_title\":\"Eco-Luxe Dreams\",\"concept_description\":\"This concept focuses on the luxurious feeling of using Dream JELLY TINT, highlighting its premium quality and eco-friendly credentials. The campaign features serene and elegant imagery that portrays the product as a dream-like experience for the skin, appealing to the aspirational lifestyle of the target audience.\",\"key_visuals\":\"Soft focus photography with pastel color palettes, emphasizing the natural ingredients and luxurious textures. Imagery includes close-ups of models applying the product with a dreamy, ethereal feel. The use of flowing fabrics and natural elements like flowers and water to enhance the theme of luxury and nature.\",\"key_messaging\":\"Tagline: 'Indulge in Eco-Luxe.' Messaging focuses on the dual benefit of luxury and sustainability, appealing to the eco-conscious lifestyle without compromising on quality.\",\"channels\":[\"Instagram visual ads and stories\",\"TikTok influencer partnerships\",\"Facebook Page community building and engagement\"]},{\"concept_title\":\"Sustainable Glamour\",\"concept_description\":\"This concept showcases the glamour of eco-friendly makeup, combining high fashion with sustainability. The campaign features bold and striking visuals that emphasize the product's vibrant colors and long-lasting wear, targeting trendy urban professionals who want to make a statement with their makeup choices.\",\"key_visuals\":\"Vibrant, high-contrast imagery with bold color pops against minimalist settings. Models styled in fashionable, high-end clothing applying the product in urban environments. Use of gold and emerald green accents to convey luxury and sustainability.\",\"key_messaging\":\"Tagline: 'Glamour with a Conscience.' Copy emphasizes the stylish, fashion-forward aspect of the product while highlighting its ethical manufacturing and natural ingredients.\",\"channels\":[\"TikTok advertising and influencer partnerships\",\"Instagram visual ads and stories\",\"Large-format outdoor billboards in urban centers\"]},{\"concept_title\":\"Naturally Chic\",\"concept_description\":\"This concept highlights the natural beauty of Dream JELLY TINT, appealing to women who value simplicity and elegance in their beauty routine. The campaign uses minimalistic and clean visual aesthetics to convey the idea of natural chic, resonating with the audience's desire for authentic, effortless beauty.\",\"key_visuals\":\"Clean, minimalist visuals with a focus on natural lighting and simple compositions. Use of neutral tones with a touch of color to highlight the product. Models with natural makeup looks in cozy, intimate settings, such as home or nature.\",\"key_messaging\":\"Tagline: 'Simply Beautiful, Naturally You.' Messaging focuses on the effortless beauty and hydration offered by the product, ideal for women who embrace their natural selves.\",\"channels\":[\"Instagram visual ads and stories\",\"Facebook Page community building and engagement\",\"Email marketing campaigns\"]}],\"content_ideas\":[{\"platform\":\"Instagram\",\"copy_suggestions\":\"สัมผัสความหรูหราในแบบ Eco-Luxe ด้วย Dream JELLY TINT ที่ให้ความรู้สึกดั่งความฝันบนริมฝีปากของคุณ\",\"content_calendar\":\"โพสต์ทุกวันจันทร์และพฤหัสบดี เวลา 18.00 น.\",\"example_content\":\"ภาพสีสันสดใสของ Dream JELLY TINT เฉดสีใหม่พร้อมข้อความกระตุ้นให้เยี่ยมชมเว็บไซต์ของเรา\",\"hashtags\":[\"#EcoLuxeDreams\",\"#DreamJELLYTINT\",\"#VeganBeauty\"],\"guideline_contents\":\"มั่นใจว่าภาพทั้งหมดมีความละเอียดสูงและคำบรรยายไม่เกิน 150 ตัวอักษร\"},{\"platform\":\"TikTok\",\"copy_suggestions\":\"สนุกไปกับการแต่งแต้มสีสันให้ริมฝีปากด้วย Dream JELLY TINT ที่ทั้งหรูหราและเป็นมิตรกับธรรมชาติ\",\"content_calendar\":\"โพสต์ทุกวันอังคารและศุกร์ เวลา 17.00 น.\",\"example_content\":\"วิดีโอจาก Influencer ที่แสดงการใช้ Dream JELLY TINT ในบรรยากาศที่หรูหราและเป็นธรรมชาติ\",\"hashtags\":[\"#SustainableGlamour\",\"#TikTokBeauty\",\"#EcoFriendly\"],\"guideline_contents\":\"ใช้ภาพเคลื่อนไหวที่ดึงดูดและเสียงเพลงที่มีพลังเพื่อดึงความสนใจ\"},{\"platform\":\"Facebook\",\"copy_suggestions\":\"ร่วมเป็นส่วนหนึ่งของชุมชนที่รักความงามและความเป็นธรรมชาติกับ Dream JELLY TINT\",\"content_calendar\":\"โพสต์ทุกวันพุธและเสาร์ เวลา 19.00 น.\",\"example_content\":\"ภาพแนวนอนที่แสดง Dream JELLY TINT ท่ามกลางการตั้งค่าที่หรูหราเพื่อเน้นการมีส่วนร่วมของชุมชนและการเล่าเรื่องของแบรนด์\",\"hashtags\":[\"#CommunityLove\",\"#EcoLuxe\",\"#PremiumBeauty\"],\"guideline_contents\":\"เน้นการสร้างเรื่องราวและการมีส่วนร่วมของชุมชนผ่านภาพและข้อความที่อบอุ่น\"}]}",
+          "raw_query": "ต้องการแคมเปญการตลาดสำหรับลิปสติกไลน์ใหม่: • ชื่อ ผลิตภัณ: Dream JELLY TINT •ตลาดระดับพรีเมียม, ราคาชิ้นละ 1000 บาท • คุณสมบัติหลัก: สูตรติดทนนานแต่ให้ความชุ่มชื้น,เนื้อบางเบา • ส่วนผสม: ผลิตจากธรรมชาติ, วีแกน, ไม่ทดลองกับสัตว์ • มีให้เลือก 15 สี • กลุ่มเป้าหมาย: ผู้หญิงอายุ 25-40 ปีที่ซื้อเครื่องสำอางพรีเมียม • งบประมาณทำการตลาด: 200,000 บาท • ระยะเวลา: เปิดตัวใน 8 สัปดาห์ • Channel: TIKTOK, IG, FACEBOOK PAGE • ต้องการแผนแคมเปญแบบเต็มรูปแบบ"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Data Storage: Content Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data Storage: Content Input": {
+      "main": [
+        [
+          {
+            "node": "Search Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Language Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Social Media Manager Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Data Storage: Content Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Language Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "JSON to Document Converter Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON to Document Converter Agent": {
+      "main": [
+        [
+          {
+            "node": "Convert to Social Media Documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Social Media Manager Agent": {
+      "main": [
+        [
+          {
+            "node": "JSON to Document Converter Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Language Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "PR Specialist Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR Specialist Agent": {
+      "main": [
+        [
+          {
+            "node": "JSON to Document Converter Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Media Contact tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "PR Specialist Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Language Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "JSON to Document Converter Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON to Document Converter Agent1": {
+      "main": [
+        [
+          {
+            "node": "Convert to PR Documents",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to PR Documents": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to Social Media Documents": {
+      "main": [
+        [
+          {
+            "node": "Google Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Folder": {
+      "main": [
+        [
+          {
+            "node": "Social Media Manager Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "PR Specialist Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Workflow Output1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8824d31b-ab10-44e2-b459-19e256890377",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "23390975537aad780256c73dac50d79295eb4a317a3325529b1a7af134ef73c5"
+  },
+  "id": "0Rl8untTbagUCIWU",
+  "tags": []
+}
