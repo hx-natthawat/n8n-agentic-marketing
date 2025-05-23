@@ -8,33 +8,85 @@ This project implements a sophisticated marketing automation system using multip
 
 ## 📋 System Architecture
 
+### Workflow Diagram
+
+```mermaid
+graph TB
+    %% User Input
+    User[User via LINE/API] -->|Campaign Request| CAI[Campaign AI<br/>Orchestrator]
+
+    %% Campaign AI processes
+    CAI -->|Extract Parameters| Lang[Language Detection]
+    Lang -->|Initialize Campaign| GD[Google Drive<br/>Folder Creation]
+
+    %% Agent Workflow
+    GD -->|Start Workflow| MM[Marketing Manager<br/>Agent]
+    MM -->|Market Research & Strategy| CD[Creative Director<br/>Agent]
+    CD -->|Creative Concepts| GDes[Graphic Designer<br/>Agent]
+
+    %% Parallel Processing
+    GDes -->|Visual Designs| CC[Content Creator<br/>Agent]
+    GDes -->|Design Specs| PR[PR & Social Media<br/>Agent]
+
+    %% Output Generation
+    CC -->|Content Strategy| DOC[Document<br/>Generation]
+    PR -->|PR & Social Plans| DOC
+
+    %% Final Output
+    DOC -->|Campaign Package| GDP[Google Drive<br/>Public Links]
+    GDP -->|Response| User
+
+    %% Agent Manager Reviews
+    AM[Agent Manager<br/>Quality Control] -.->|Review & Approve| MM
+    AM -.->|Review & Approve| CD
+    AM -.->|Review & Approve| GDes
+    AM -.->|Review & Approve| CC
+    AM -.->|Review & Approve| PR
+
+    %% Styling
+    style MM fill:#f9f,stroke:#333,stroke-width:4px
+    style CD fill:#f9f,stroke:#333,stroke-width:4px
+    style GDes fill:#f9f,stroke:#333,stroke-width:4px
+    style CC fill:#f9f,stroke:#333,stroke-width:4px
+    style PR fill:#f9f,stroke:#333,stroke-width:4px
+    style CAI fill:#999,stroke:#333,stroke-width:4px
+    style User fill:#bbf,stroke:#333,stroke-width:2px
+    style DOC fill:#bfb,stroke:#333,stroke-width:2px
+    style AM fill:#fbb,stroke:#333,stroke-width:2px
+```
+
 ### Core Components
 
 1. **Campaign AI (Orchestrator)**
+
    - Central workflow that coordinates all agents
    - Handles user interactions via LINE messaging
    - Manages workflow execution sequence
    - Creates and organizes campaign documents in Google Drive
 
 2. **Marketing Manager Agent**
+
    - Conducts market research and competitor analysis
    - Defines campaign objectives and strategy
    - Sets KPIs, timeline, and budget allocation
    - Targets audience segmentation
 
 3. **Creative Director Agent**
+
    - Develops multiple creative concepts
    - Aligns creative strategy with campaign objectives
    - Defines visual direction and messaging
    - Provides channel-specific creative strategies
 
 4. **Graphic Designer Agent**
+
    - Creates detailed visual design specifications
    - Generates AI image prompts and mockups
    - Defines color palettes and typography
    - Produces platform-specific design assets
 
 5. **Content Creator Agent**
+
    - Develops content strategies for each platform
    - Creates content calendars and posting schedules
    - Generates copy suggestions and hashtags
@@ -49,7 +101,7 @@ This project implements a sophisticated marketing automation system using multip
 ## 🛠️ Technical Stack
 
 - **Workflow Engine**: n8n
-- **AI Models**: 
+- **AI Models**:
   - OpenAI GPT-4 (for agent reasoning)
   - Google Gemini 2.0 Flash (for image generation)
 - **Integrations**:
@@ -100,6 +152,7 @@ n8n start
 ### Installation
 
 1. **Import Workflows**
+
    ```bash
    # In n8n UI, go to Workflows > Import
    # Import files in this order:
@@ -112,6 +165,7 @@ n8n start
    ```
 
 2. **Configure Credentials**
+
    - Navigate to Credentials in n8n
    - Add OpenAI credentials (API key)
    - Add Google OAuth2 (for Drive/Docs)
@@ -119,6 +173,7 @@ n8n start
    - Add Google Gemini credentials
 
 3. **Update Webhook URLs**
+
    ```javascript
    // In Campaign AI workflow, update:
    const WEBHOOK_URL = "https://your-domain.com/webhook/campaign-request";
@@ -133,9 +188,10 @@ n8n start
 ### Deployment Options
 
 #### Option 1: Docker Deployment
+
 ```yaml
 # docker-compose.yml
-version: '3.8'
+version: "3.8"
 services:
   n8n:
     image: n8nio/n8n
@@ -152,6 +208,7 @@ services:
 ```
 
 #### Option 2: Cloud Deployment
+
 - **n8n Cloud**: Direct import via UI
 - **AWS/GCP/Azure**: Use container services
 - **Heroku**: One-click deployment available
@@ -159,6 +216,7 @@ services:
 ### Usage
 
 1. **Via LINE Bot**:
+
    ```
    User: Create marketing campaign for Dream JELLY TINT
    Bot: Processing your request...
@@ -166,6 +224,7 @@ services:
    ```
 
 2. **Via API**:
+
    ```bash
    curl -X POST https://your-n8n.com/webhook/campaign-request \
      -H "Content-Type: application/json" \
@@ -192,21 +251,25 @@ services:
 ## 📊 Workflow Features
 
 ### Multi-Language Support
+
 - Automatic language detection from user input
 - Responses in user's preferred language
 - Internal agent communication in English for consistency
 
 ### Quality Assurance
+
 - Built-in approval workflows with feedback loops
 - Agent Manager reviews outputs before proceeding
 - Maximum 3 revision cycles to ensure quality
 
 ### Document Management
+
 - Automatic Google Drive folder creation
 - Organized document structure by campaign
 - Public sharing links for easy access
 
 ### Platform-Specific Content
+
 - Tailored strategies for TikTok, Instagram, Facebook
 - Channel-specific design specifications
 - Optimized content for each platform's best practices
@@ -214,13 +277,17 @@ services:
 ## 🔧 Configuration
 
 ### Environment Variables
+
 Configure these in your n8n instance:
+
 - `OPENAI_API_KEY`: Your OpenAI API key
 - `GOOGLE_CLIENT_ID`: Google OAuth client ID
 - `LINE_CHANNEL_ACCESS_TOKEN`: LINE bot access token
 
 ### Webhook Endpoints
+
 Update these URLs in Campaign AI workflow:
+
 - Campaign request webhook
 - LINE messaging webhook
 
@@ -231,6 +298,7 @@ Update these URLs in Campaign AI workflow:
 **POST** `/webhook/campaign-request`
 
 Headers:
+
 ```json
 {
   "Content-Type": "application/json",
@@ -239,6 +307,7 @@ Headers:
 ```
 
 Body:
+
 ```json
 {
   "campaign_request": {
@@ -280,11 +349,13 @@ Body:
 ### Agent Communication Protocol
 
 1. **Input Processing**
+
    ```
    User Request → Language Detection → Parameter Extraction
    ```
 
 2. **Agent Orchestration**
+
    ```
    Marketing Manager → Creative Director → Graphic Designer
                     ↓
@@ -345,11 +416,13 @@ Proprietary - All rights reserved
 ### Common Issues
 
 1. **Workflow Timeout**
+
    - Increase timeout settings in n8n
    - Check API rate limits
    - Verify network connectivity
 
 2. **Agent Communication Failures**
+
    - Ensure all credentials are properly configured
    - Check JSON schema compatibility
    - Verify webhook URLs are accessible
@@ -360,7 +433,9 @@ Proprietary - All rights reserved
    - Verify API quotas
 
 ### Debug Mode
+
 Enable debug logging in n8n to trace workflow execution:
+
 ```bash
 export N8N_LOG_LEVEL=debug
 ```
@@ -370,6 +445,7 @@ export N8N_LOG_LEVEL=debug
 ### Custom Agent Behaviors
 
 Modify agent system prompts in respective workflows:
+
 - Adjust tone and style guidelines
 - Add industry-specific knowledge
 - Customize approval criteria
@@ -377,6 +453,7 @@ Modify agent system prompts in respective workflows:
 ### Performance Optimization
 
 1. **Parallel Processing**
+
    - Enable concurrent agent execution where possible
    - Adjust memory allocation for large campaigns
    - Implement caching for repeated requests
@@ -389,6 +466,7 @@ Modify agent system prompts in respective workflows:
 ### Integration Extensions
 
 The system can be extended with:
+
 - Slack notifications
 - Email reporting
 - CRM integration
@@ -437,11 +515,13 @@ The system can be extended with:
 ### Campaign Request Guidelines
 
 1. **Product Information**
+
    - Provide clear, unique selling propositions
    - Include all relevant features and benefits
    - Specify any regulatory requirements
 
 2. **Target Audience**
+
    - Be specific about demographics
    - Include psychographic details
    - Mention purchasing behaviors
@@ -454,11 +534,13 @@ The system can be extended with:
 ### Workflow Optimization
 
 1. **Reduce Latency**
+
    - Pre-warm API connections
    - Cache common responses
    - Use webhook queuing for high volume
 
 2. **Error Handling**
+
    - Implement exponential backoff
    - Set reasonable retry limits
    - Log all failures for debugging
@@ -471,11 +553,13 @@ The system can be extended with:
 ## 📚 Resources
 
 ### Documentation
+
 - [n8n Workflow Documentation](https://docs.n8n.io)
 - [OpenAI API Reference](https://platform.openai.com/docs)
 - [Google Workspace APIs](https://developers.google.com/workspace)
 
 ### Support
+
 - Technical Issues: Create issue in project repository
 - Feature Requests: Contact development team
 - Training Materials: Available in shared drive
@@ -485,6 +569,7 @@ The system can be extended with:
 Built with n8n workflow automation platform and powered by OpenAI and Google AI technologies.
 
 ### Special Thanks
+
 - n8n community for workflow automation framework
 - OpenAI for GPT-4 language models
 - Google for Gemini AI and Workspace APIs
