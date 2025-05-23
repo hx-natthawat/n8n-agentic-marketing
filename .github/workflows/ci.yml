@@ -1,0 +1,90 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-workflows:
+    name: Validate n8n Workflows
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Validate JSON syntax
+        run: |
+          echo "🔍 Validating JSON syntax..."
+          for file in Agentic_Marketing___*.json; do
+            echo "Checking $file"
+            jq empty "$file" || exit 1
+          done
+          echo "✅ All JSON files are valid"
+          
+      - name: Check for hardcoded secrets
+        run: |
+          echo "🔐 Checking for hardcoded secrets..."
+          # Check for potential API keys
+          if grep -r "api[_-]?key.*=.*[A-Za-z0-9]\{20,\}" *.json; then
+            echo "❌ Found potential hardcoded API keys!"
+            exit 1
+          fi
+          # Check for specific patterns
+          if grep -r "AIza[0-9A-Za-z\-_]\{35\}" *.json; then
+            echo "❌ Found Google API key pattern!"
+            exit 1
+          fi
+          echo "✅ No hardcoded secrets found"
+          
+      - name: Validate workflow structure
+        run: |
+          echo "📋 Validating workflow structure..."
+          for file in Agentic_Marketing___*.json; do
+            # Check for required fields
+            jq -e '.nodes | length > 0' "$file" > /dev/null || \
+              (echo "❌ $file: No nodes found" && exit 1)
+            jq -e '.connections | length > 0' "$file" > /dev/null || \
+              (echo "❌ $file: No connections found" && exit 1)
+            echo "✅ $file: Valid structure"
+          done
+          echo "✅ All workflows have valid structure"
+
+  documentation-check:
+    name: Check Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check required documentation
+        run: |
+          echo "📚 Checking documentation..."
+          required_files=("README.md" "CONTRIBUTING.md" "SECURITY.md" "CLAUDE.md" ".env.example")
+          missing_files=()
+          
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              missing_files+=("$file")
+            fi
+          done
+          
+          if [ ${#missing_files[@]} -ne 0 ]; then
+            echo "❌ Missing required documentation:"
+            printf '%s\n' "${missing_files[@]}"
+            exit 1
+          fi
+          
+          echo "✅ All required documentation present"
+          
+      - name: Check markdown links
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          use-quiet-mode: 'yes'
+          use-verbose-mode: 'no'
+          config-file: '.github/markdown-link-check.json'
+        continue-on-error: true
