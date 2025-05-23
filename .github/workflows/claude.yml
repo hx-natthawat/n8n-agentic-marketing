@@ -22,16 +22,32 @@ jobs:
       (github.event_name == 'pull_request' && github.event.action == 'opened') ||
       (github.event_name == 'pull_request_review')
     permissions:
+      # Read access to metadata
+      metadata: read
+      # Read and write access to code
       contents: write
+      # Read and write access to issues
       issues: write
+      # Read and write access to pull requests
       pull-requests: write
+      # Additional permissions that might be needed
+      actions: read
+      checks: read
+      discussions: read
+      packages: read
+      pages: read
+      repository-projects: read
+      security-events: read
+      statuses: read
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: anthropics/claude-code-action@v0.0.7
+      - name: Run Claude Assistant
+        uses: anthropics/claude-code-action@v0.0.7
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
