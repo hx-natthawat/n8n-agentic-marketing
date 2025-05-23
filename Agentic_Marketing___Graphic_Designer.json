@@ -7,10 +7,7 @@
       "name": "When Executed by Another Workflow",
       "type": "n8n-nodes-base.executeWorkflowTrigger",
       "typeVersion": 1,
-      "position": [
-        20,
-        280
-      ]
+      "position": [20, 280]
     },
     {
       "parameters": {
@@ -33,10 +30,7 @@
       "name": "Data Storage: Creative Concepts Input",
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
-      "position": [
-        580,
-        100
-      ]
+      "position": [580, 100]
     },
     {
       "parameters": {
@@ -47,10 +41,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
-      "position": [
-        1120,
-        340
-      ],
+      "position": [1120, 340],
       "id": "64f3c029-9bed-46fe-af50-281f3b70cee8",
       "name": "OpenAI Chat Model",
       "credentials": {
@@ -68,10 +59,7 @@
       "id": "5b0ffabf-3180-4806-9b79-fe3116f99ee8",
       "name": "Brand Guidelines Tool",
       "type": "@n8n/n8n-nodes-langchain.toolCode",
-      "position": [
-        1320,
-        420
-      ],
+      "position": [1320, 420],
       "typeVersion": 1
     },
     {
@@ -86,10 +74,7 @@
       "name": "Graphic Designer Agent",
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.6,
-      "position": [
-        1260,
-        100
-      ]
+      "position": [1260, 100]
     },
     {
       "parameters": {
@@ -112,10 +97,7 @@
       "name": "Data Storage: Design Assets",
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
-      "position": [
-        2720,
-        100
-      ]
+      "position": [2720, 100]
     },
     {
       "parameters": {
@@ -142,10 +124,7 @@
       "name": "Workflow Output",
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
-      "position": [
-        4060,
-        100
-      ]
+      "position": [4060, 100]
     },
     {
       "parameters": {
@@ -155,10 +134,7 @@
       },
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
-      "position": [
-        260,
-        60
-      ],
+      "position": [260, 60],
       "id": "a262302c-86c3-4d45-a9cc-d0b9fe361c94",
       "name": "Edit Fields",
       "disabled": true
@@ -167,10 +143,7 @@
       "parameters": {},
       "type": "n8n-nodes-base.manualTrigger",
       "typeVersion": 1,
-      "position": [
-        0,
-        0
-      ],
+      "position": [0, 0],
       "id": "5c1180e0-14d5-4896-b7ea-33bc3c09f29e",
       "name": "When clicking ‘Test workflow’",
       "disabled": true
@@ -181,10 +154,7 @@
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [
-        2940,
-        100
-      ],
+      "position": [2940, 100],
       "id": "08fc2c8f-4489-4f74-86f8-09b5ac747e04",
       "name": "Extract DALL-E Prompts"
     },
@@ -195,10 +165,7 @@
       },
       "type": "n8n-nodes-base.splitOut",
       "typeVersion": 1,
-      "position": [
-        3140,
-        100
-      ],
+      "position": [3140, 100],
       "id": "93c84f83-111d-42dc-94fd-c97e8457bf6c",
       "name": "Split Out"
     },
@@ -217,10 +184,7 @@
       },
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [
-        3360,
-        100
-      ],
+      "position": [3360, 100],
       "id": "4b8f5ce0-4713-4381-9bb1-4c8397171784",
       "name": "HTTP Request",
       "executeOnce": false
@@ -237,10 +201,7 @@
       },
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
-      "position": [
-        3580,
-        100
-      ],
+      "position": [3580, 100],
       "id": "8a9cfb54-7645-4dca-bff9-28b49738d361",
       "name": "Convert to File",
       "onError": "continueRegularOutput"
@@ -262,10 +223,7 @@
       },
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [
-        3800,
-        100
-      ],
+      "position": [3800, 100],
       "id": "aa4b4a88-4d41-4343-98f4-257a98a3db2d",
       "name": "Google Drive",
       "credentials": {
@@ -286,10 +244,7 @@
       },
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [
-        900,
-        100
-      ],
+      "position": [900, 100],
       "id": "9be969e7-952b-42c2-bd47-3172cab16609",
       "name": "Search Folder",
       "credentials": {
@@ -310,10 +265,7 @@
       "name": "Language Model1",
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1,
-      "position": [
-        1680,
-        360
-      ],
+      "position": [1680, 360],
       "credentials": {
         "openAiApi": {
           "id": "2cAtVcN7wisKXhHj",
@@ -331,10 +283,7 @@
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 1.7,
-      "position": [
-        1720,
-        100
-      ],
+      "position": [1720, 100],
       "id": "ccf426c8-d0ea-4719-8a9b-1afa46867db3",
       "name": "JSON to Document Converter Agent"
     },
@@ -348,10 +297,7 @@
       },
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
-      "position": [
-        2200,
-        80
-      ],
+      "position": [2200, 80],
       "id": "e31ffbe8-c70c-4447-83d7-af24f41482c7",
       "name": "Convert to Graphic Design Documents"
     },
@@ -372,10 +318,7 @@
       },
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
-      "position": [
-        2460,
-        100
-      ],
+      "position": [2460, 100],
       "id": "e4bbd6ad-3016-4336-bc98-b1fe94b45c46",
       "name": "Google Drive1",
       "credentials": {
