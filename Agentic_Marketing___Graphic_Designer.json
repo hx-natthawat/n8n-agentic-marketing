@@ -205,7 +205,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=AIzaSyCXsui90A8dtMD1ucuaCpFLOMtI8ifYZhI",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent?key=${{GOOGLE_API_KEY}}",
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\n    \"contents\": [{\n      \"parts\": [\n        {\"text\": \"{{ $json.prompt }}\" }\n      ]\n    }],\n    \"generationConfig\":{\"responseModalities\":[\"Text\",\"Image\"]}\n  }",
