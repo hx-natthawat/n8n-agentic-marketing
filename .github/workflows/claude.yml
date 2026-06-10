@@ -47,7 +47,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Claude Assistant
-        uses: anthropics/claude-code-action@v0.0.7
+        uses: anthropics/claude-code-action@v1.0.74
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
